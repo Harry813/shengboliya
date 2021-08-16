@@ -1,0 +1,217 @@
+{% extends "nav-bar.html" %}
+{% load static %}
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "style/aui.css" %}">
+    <style>
+        .box {
+            margin: auto;
+            position: relative;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 10%;
+        }
+
+        .box-digit {
+            line-height: 3.5rem;
+            text-align: center;
+        }
+
+        .bg-grad-blue {
+            background-image: linear-gradient(#4bb5e7, #39a5d3)
+        }
+
+        .bg-grad-purple {
+            background-image: linear-gradient(#785be7, #434ad6)
+        }
+
+        .page-back {
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        .flex {
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-box-align: center;
+            -webkit-align-items: center;
+            align-items: center;
+            padding: 15px;
+            position: relative;
+        }
+
+        .invi-code {
+            color: white;
+        }
+
+        .bg-gold {
+            background-color: #ffd700;
+        }
+
+        .bg-dark-25 {
+            background-color: rgba(0, 0, 0, .25)
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="aui-flexView">
+        <div class="w-100">
+            <div class="aui-health-head" style="background-image: linear-gradient(45deg, #1D97C1, #53C7F0);">
+                <div class="flex container" style="padding-top: 3rem">
+                    <div class="aui-health-user">
+                        {% if user is not None %}
+                            {% if user.avatar %}
+                                <img src="{{ user.avatar.url }}" alt="">
+                            {% else %}
+                                <img src="{% static "images/115X115.gif" %}" alt="">
+                            {% endif %}
+                        {% else %}
+                            <img src="{% static "images/115X115.gif" %}" alt="">
+                        {% endif %}
+                    </div>
+                    <div class="aui-flex-box">
+                        {% if user is not None %}
+                            <h1>
+                                {{ user.get_full_name }}
+                                {% if user.id_card %}
+                                    <span class="badge rounded-pill" style="font-size: 50%; background-color: #F7A52C">已认证</span>
+                                {% else %}
+                                    <span class="badge rounded-pill bg-dark-25" style="font-size: 50%">未认证</span>
+                                {% endif %}
+                            </h1>
+                            <p class="invi-code">推广码: {{ user.invi_code }}</p>
+                        {% else %}
+                            <a href="{% url "login" %}"><h1> 请先登录~ </h1></a>
+                        {% endif %}
+                    </div>
+                    <div class="aui-flex-box" style="text-align: right">
+                        <a class="text-white fs-4" href="{% url 'setting' %}"><i class="bi bi-gear"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container">
+                <div class="row" style="background-color: transparent; margin-top: -4rem;">
+                    <div class="col">
+                        <div class="card shadow" style="border-radius: .5rem">
+                            <div class="card-header bg-transparent border-0 mt-1">
+                                邀请用户(人)<a style="float: right" href="#"><i class="bi bi-chevron-right"></i></a>
+                            </div>
+                            <div class="card-body">
+                                <h1 class="card-title">{% if invi_count %}{{ invi_count }}{% else %}0{% endif %}</h1>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col">
+                        <div class="card shadow" style="border-radius: .5rem">
+                            <div class="card-header bg-transparent border-0 mt-1">
+                                合作人团伙(人)<a style="float: right" href="#"><i class="bi bi-chevron-right"></i></a>
+                            </div>
+                            <div class="card-body">
+                                <h1 class="card-title">0</h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col">
+                        <div class="card bg-primary text-white shadow"
+                             style="border-radius: .5rem {% if wallet %}.5rem 0 0{% endif %};">
+                            <div class="card-header bg-transparent border-0">总收入(元)</div>
+                            <div class="card-body">
+                                <div class="row align-items-end">
+                                    <div class="col">
+                                        <div class="card-text">
+                                            {% if user.balance %}
+                                                <p>¥
+                                                    <span style="font-size: 2rem; font-weight: bold">
+                                                        {{ user.balance | floatformat:2 }}
+                                                    </span>
+                                                </p>
+                                            {% else %}
+                                                {{ 0 | floatformat:2 }}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% if user is not None %}
+                                        <div class="col">
+                                            <a class="text-white card-text" style="float: right"
+                                               href="{% url 'transactions' %}">详情<i
+                                                    class="bi bi-chevron-right"></i></a>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            {% if wallet %}
+                                <div class="card-footer bg-transparent border-0 mt-2">
+                                    <div class="row">
+                                        <div class="col">
+                                            <small>可提现 {{ user.available | floatformat:2 }}</small>
+                                        </div>
+                                        <div class="col">
+                                            <p class="text-white card-text" style="float: right">
+                                                今日收入 {{ user.today | floatformat:2 }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mt-4">
+                <h1 style="color: black">分佣结算说明</h1>
+                <a href="{% url 'partnerRule' %}" class="small" style="float: right">查看详情<i class="bi bi-chevron-right"></i></a>
+                <div class="row mt-4">
+                    <div class="col" style="text-align:center; border-right: 1px solid #c0c4cc">
+                        <div class="text-white bg-grad-blue box" style=""><h1 class="box-digit">1</h1></div>
+                        <div class="fs-5 mt-2"><strong>获得下级</strong></div>
+                        <div><strong>总收入</strong></div>
+                        <div class="fs-1" style="color: #39a5d3"><strong>10%</strong></div>
+                        <div><strong>收入奖励</strong></div>
+                    </div>
+
+                    <div class="col" style="text-align:center;">
+                        <div class="text-white bg-grad-purple box" style=""><h1 class="box-digit">2</h1></div>
+                        <div class="fs-5 mt-2"><strong>获得下下级</strong></div>
+                        <div><strong>总收入</strong></div>
+                        <div class="fs-1" style="color: #434ad6"><strong>5%</strong></div>
+                        <div><strong>收入奖励</strong></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container mt-4">
+                <div class="row">
+                    <div class="col">
+                        <button class="btn text-white w-100"
+                                onclick="setClipboard('请点击下方链接进行注册: https://draw.hanxiaofei.tk/register/inv={{ user.invi_code }}')"
+                                style="background-color: dodgerblue; height: 4rem;line-height: 4rem; display: block;">
+                            招募代理
+                        </button>
+
+                        <script>
+
+                        </script>
+                    </div>
+                </div>
+            </div>
+
+            <div style="height: 100px; color: white"></div>
+        </div>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "nav-bar.html" %}
+{% load static %}
+
+{% block css %}
+    <style>
+        .rebate-badge{
+            color:darkorange;
+            background-color: rgba(255,156,43,0.3);
+            height: 1.5rem
+        }
+
+        .estab-button{
+            height:2.5rem; border-radius: 1.25rem
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container-md" style="position: relative">
+        <div class="row mt-3 mx-3">
+            <div style="display:flex;justify-content:space-between">
+                <h3>医院分类</h3>
+                <a href="{% url 'operatorsF' 'ALL' %}" class="text-decoration-none btn" style="color:grey;">查看所有医院 ></a>
+            </div>
+            <div class="my-3">
+                <div class="list-group list-group-horizontal text-center">
+                    <a href="{% url 'operatorsF' 'PRSTDO' %}" class="list-group-item list-group-item-action">
+                        <img src="{% static 'images/icons/PRSTDO.png' %}" alt="私人工作室"
+                             style="width: 100%; max-width: 128px">
+                        <p style="font-size: .875rem">私人工作室</p>
+                    </a>
+
+                    <a href="{% url 'operatorsF' 'PRHOSP' %}" class="list-group-item list-group-item-action">
+                        <img src="{% static 'images/icons/PRHOSP.png' %}" alt="私立医院"
+                             style="width: 100%; max-width: 128px">
+                        <p style="font-size: .875rem">私立医院</p>
+                    </a>
+
+                    <a href="{% url 'operatorsF' 'PUHOSP' %}" class="list-group-item list-group-item-action">
+                        <img src="{% static 'images/icons/PUHOSP.png' %}" alt="公立医院"
+                             style="width: 100%; max-width: 128px">
+                        <p style="font-size: .875rem">公立医院</p>
+                    </a>
+
+                    <a href="{% url 'operatorsF' 'INDOCT' %}" class="list-group-item list-group-item-action">
+                        <img src="{% static 'images/icons/INDOCT.png' %}" alt="独立医生"
+                             style="width: 100%; max-width: 128px">
+                        <p style="font-size: .875rem">独立医生</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3 mx-3">
+            <div style="display:flex;justify-content:space-between">
+                <h3 class="mb-3">{{ hosp_type }}</h3>
+            </div>
+
+            <div class="card">
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for op in op_list %}
+                            <li class="list-group-item">
+                                <div class="mt-3" style="display:flex;justify-content:space-between">
+                                    <h4><strong>{{ op.name }}</strong></h4>
+                                    {% if op.rebate_time %}
+                                        <p class="badge rebate-badge">{{ op.rebate_time }}</p>
+                                    {% endif %}
+                                </div>
+
+                                <div style="display:flex;justify-content:space-between">
+                                    <p style="color: #bb0e0e; font-family: Montserrat,serif; font-size: 3.5rem;">
+                                        <strong><i>
+                                            {% if usr_lv < 0 %}
+                                                {{ op.max_rebate }}%
+                                            {% elif usr_lv == 0 %}
+                                                {{ op.rebate_lv0 }}%
+                                            {% elif usr_lv == 1 %}
+                                                {{ op.rebate_lv1 }}%
+                                            {% elif usr_lv == 2 %}
+                                                {{ op.rebate_lv2 }}%
+                                            {% endif %}</i></strong>
+                                    </p>
+                                    <a href="{% url 'operatorsD' op.id %}" class="btn btn-primary px-3 mt-4 estab-button">立即推广</a>
+                                </div>
+                                <small>
+                                    <span style="color: #bb0e0e">{% if usr_lv < 0 %}最高{% endif %}返佣</span>
+                                    {% if op.address %}
+                                        &nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span style="color: grey;">地址: {{ op.address }}</span>
+                                    {% endif %}
+                                </small>
+                            </li>
+                        {% empty %}
+                            <li class="list-group-item text-center">
+                                暂无记录
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div style="height: 100px; color: white"></div>
+
+{% endblock %}

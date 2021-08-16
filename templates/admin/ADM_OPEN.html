@@ -1,0 +1,402 @@
+{% extends 'admin/ADM_Template.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+
+{% block board_content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0 font-weight-bold">基础信息</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                           for="{{ ADM_OPForm.name.id_for_label }}">{{ ADM_OPForm.name.label }}</label>
+                                    {% render_field ADM_OPForm.name class="form-control" %}
+                                    <div>
+                                        {% if ADM_OPForm.name.help_text %}
+                                            <p class="small">{{ ADM_OPForm.name.help_text }}</p>
+                                        {% elif ADM_OPForm.name.errors %}
+                                            <p class="small" style="color: red;">{{ ADM_OPForm.name.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label"
+                                           for="{{ ADM_OPForm.tele.id_for_label }}">{{ ADM_OPForm.tele.label }}</label>
+                                    {% render_field ADM_OPForm.tele class="form-control" %}
+                                    <div>
+                                        {% if ADM_OPForm.code.help_text %}
+                                            <p class="small">{{ ADM_OPForm.tele.help_text }}</p>
+                                        {% elif ADM_OPForm.code.errors %}
+                                            <p class="small" style="color: red;">{{ ADM_OPForm.tele.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label w-100"
+                                           for="{{ ADM_OPForm.logo.id_for_label }}">{{ ADM_OPForm.logo.label }}</label>
+                                    {% render_field ADM_OPForm.logo %}
+                                    <div>
+                                        {% if ADM_OPForm.logo.help_text %}
+                                            <p class="small">{{ ADM_OPForm.logo.help_text|linebreaks }}</p>
+                                        {% elif ADM_OPForm.code.errors %}
+                                            <p class="small" style="color: red;">{{ ADM_OPForm.logo.errors.0 }}</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_OPForm.address.id_for_label }}">{{ ADM_OPForm.address.label }}</label>
+                                {% render_field ADM_OPForm.address class="form-control" %}
+                                <div>
+                                    {% if ADM_OPForm.code.help_text %}
+                                        <p class="small">{{ ADM_OPForm.address.help_text }}</p>
+                                    {% elif ADM_OPForm.code.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.address.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_OPForm.city.id_for_label }}">
+                                    {{ ADM_OPForm.city.label }}</label>
+                                {% render_field ADM_OPForm.city class="form-control" %}
+                                <div>
+                                    {% if ADM_OPForm.city.help_text %}
+                                        <p class="small">{{ ADM_OPForm.city.help_text }}</p>
+                                    {% elif ADM_OPForm.city.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.city.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-4 col-sm-8 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_OPForm.province.id_for_label }}">{{ ADM_OPForm.province.label }}</label>
+                                {% render_field ADM_OPForm.province class="form-control" %}
+                                <div>
+                                    {% if ADM_OPForm.province.help_text %}
+                                        <p class="small">{{ ADM_OPForm.province.help_text }}</p>
+                                    {% elif ADM_OPForm.province.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.province.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-2 col-sm-4 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_OPForm.zip_code.id_for_label }}">{{ ADM_OPForm.zip_code.label }}</label>
+                                {% render_field ADM_OPForm.zip_code class="form-control" %}
+                                <div>
+                                    {% if ADM_OPForm.zip_code.help_text %}
+                                        <p class="small">{{ ADM_OPForm.zip_code.help_text }}</p>
+                                    {% elif ADM_OPForm.zip_code.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.zip_code.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        
+                            <div class="mb-3">
+                                <label class="form-label" for="{{ ADM_OPForm.description.id_for_label }}">{{ ADM_OPForm.description.label }}</label>
+                                {% render_field ADM_OPForm.description class="form-control" %}
+                                <div>
+                                    {% if ADM_OPForm.description.help_text %}
+                                        <p class="small">{{ ADM_OPForm.description.help_text }}</p>
+                                    {% elif ADM_OPForm.description.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.description.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0 font-weight-bold">星级评价</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_OPForm.star.id_for_label }}">{{ ADM_OPForm.star.label }}</label>
+                                <span class="ml-3" id="{{ ADM_OPForm.star.id_for_label }}_value">
+                                    {% if ADM_OPForm.instance %}
+                                        {{ ADM_OPForm.instance.star }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                </span>
+                                {% render_field ADM_OPForm.star type="range" class="form-range" min="0" max="5" step="0.5" oninput="onChangeStar()" %}
+                                <div>
+                                    {% if ADM_OPForm.star.help_text %}
+                                        <p class="small">{{ ADM_OPForm.star.help_text }}</p>
+                                    {% elif ADM_OPForm.star.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.star.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_OPForm.effect.id_for_label }}">{{ ADM_OPForm.effect.label }}</label>
+                                <span class="ml-3" id="{{ ADM_OPForm.effect.id_for_label }}_value">
+                                    {% if ADM_OPForm.instance %}
+                                        {{ ADM_OPForm.instance.effect }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                </span>
+                                {% render_field ADM_OPForm.effect type="range" class="form-range" min="0" max="5" oninput="onChangeEffect()" %}
+                                <div>
+                                    {% if ADM_OPForm.effect.help_text %}
+                                        <p class="small">{{ ADM_OPForm.effect.help_text }}</p>
+                                    {% elif ADM_OPForm.effect.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.effect.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_OPForm.service.id_for_label }}">{{ ADM_OPForm.service.label }}</label>
+                                <span class="ml-3" id="{{ ADM_OPForm.service.id_for_label }}_value">
+                                    {% if ADM_OPForm.instance %}
+                                        {{ ADM_OPForm.instance.service }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                </span>
+                                {% render_field ADM_OPForm.service type="range" class="form-range" min="0" max="5" oninput="onChangeService()" %}
+                                <div>
+                                    {% if ADM_OPForm.service.help_text %}
+                                        <p class="small">{{ ADM_OPForm.service.help_text }}</p>
+                                    {% elif ADM_OPForm.service.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.service.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_OPForm.proficiency.id_for_label }}">{{ ADM_OPForm.proficiency.label }}</label>
+                                <span class="ml-3" id="{{ ADM_OPForm.proficiency.id_for_label }}_value">
+                                    {% if ADM_OPForm.instance %}
+                                        {{ ADM_OPForm.instance.proficiency }}
+                                    {% else %}
+                                        0
+                                    {% endif %}
+                                </span>
+                                {% render_field ADM_OPForm.proficiency type="range" class="form-range" min="0" max="5" oninput="onChangeProf()" %}
+                                <div>
+                                    {% if ADM_OPForm.proficiency.help_text %}
+                                        <p class="small">{{ ADM_OPForm.proficiency.help_text }}</p>
+                                    {% elif ADM_OPForm.proficiency.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.proficiency.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0 font-weight-bold">证件</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3">
+                                <label class="form-label" for="{{ ADM_OPForm.oper_type.id_for_label }}">{{ ADM_OPForm.oper_type.label }}</label>
+                                {% render_field ADM_OPForm.oper_type class="form-control" %}
+                                <div>
+                                    {% if ADM_OPForm.oper_type.help_text %}
+                                        <p class="small">{{ ADM_OPForm.oper_type.help_text }}</p>
+                                    {% elif ADM_OPForm.oper_type.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.oper_type.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label w-100"
+                                       for="{{ ADM_OPForm.oper_license.id_for_label }}">{{ ADM_OPForm.oper_license.label }}</label>
+                                {% render_field ADM_OPForm.oper_license %}
+                                <div>
+                                    {% if ADM_OPForm.oper_license.help_text %}
+                                        <p class="small">{{ ADM_OPForm.oper_license.help_text|linebreaks }}</p>
+                                    {% elif ADM_OPForm.oper_license.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.oper_license.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label w-100"
+                                       for="{{ ADM_OPForm.oper_certificate.id_for_label }}">{{ ADM_OPForm.oper_certificate.label }}</label>
+                                {% render_field ADM_OPForm.oper_certificate %}
+                                <div>
+                                    {% if ADM_OPForm.oper_certificate.help_text %}
+                                        <p class="small">{{ ADM_OPForm.oper_certificate.help_text|linebreaks }}</p>
+                                    {% elif ADM_OPForm.oper_certificate.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.oper_certificate.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 my-3">
+                                <div class="form-check form-switch">
+                                    {% render_field ADM_OPForm.verified class="form-check-input" type="checkbox" %}
+                                    <label class="form-check-label ml-3" for="{{ ADM_OPForm.verified.id_for_label }}">是否点亮认证标签</label>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 my-3">
+                                <div class="form-check form-switch">
+                                    {% render_field ADM_OPForm.pin class="form-check-input" type="checkbox" %}
+                                    <label class="form-check-label ml-3" for="{{ ADM_OPForm.pin.id_for_label }}">是否放置推荐位</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0 font-weight-bold">返佣规则</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label" for="{{ ADM_OPForm.rebate_lv0.id_for_label }}">{{ ADM_OPForm.rebate_lv0.label }}</label>
+                                {% render_field ADM_OPForm.rebate_lv0 class="form-control" min="0" max="100" %}
+                                <div>
+                                    {% if ADM_OPForm.rebate_lv0.help_text %}
+                                        <p class="small">{{ ADM_OPForm.rebate_lv0.help_text }}</p>
+                                    {% elif ADM_OPForm.rebate_lv0.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.rebate_lv0.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label" for="{{ ADM_OPForm.rebate_lv1.id_for_label }}">{{ ADM_OPForm.rebate_lv1.label }}</label>
+                                {% render_field ADM_OPForm.rebate_lv1 class="form-control" min="0" max="100" %}
+                                <div>
+                                    {% if ADM_OPForm.rebate_lv1.help_text %}
+                                        <p class="small">{{ ADM_OPForm.rebate_lv1.help_text }}</p>
+                                    {% elif ADM_OPForm.rebate_lv1.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.rebate_lv1.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="mb-3 col-md-4">
+                                <label class="form-label" for="{{ ADM_OPForm.rebate_lv2.id_for_label }}">{{ ADM_OPForm.rebate_lv2.label }}</label>
+                                {% render_field ADM_OPForm.rebate_lv2 class="form-control" min="0" max="100" %}
+                                <div>
+                                    {% if ADM_OPForm.rebate_lv2.help_text %}
+                                        <p class="small">{{ ADM_OPForm.rebate_lv2.help_text }}</p>
+                                    {% elif ADM_OPForm.rebate_lv2.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.rebate_lv2.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        
+                            <div class="mb-3">
+                                <label class="form-label" for="{{ ADM_OPForm.rebate_time.id_for_label }}">{{ ADM_OPForm.rebate_time.label }}</label>
+                                {% render_field ADM_OPForm.rebate_time class="form-control" %}
+                                <div>
+                                    {% if ADM_OPForm.rebate_time.help_text %}
+                                        <p class="small">{{ ADM_OPForm.rebate_time.help_text }}</p>
+                                    {% elif ADM_OPForm.rebate_time.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_OPForm.rebate_time.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <button type="submit" class="btn btn-primary w-100">保存修改</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if ADM_OPForm.errors %}
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title mb-0 font-weight-bold text-danger">ERROR</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                {% for e in ADM_OPForm.errors %}
+                                    <li>{{ e }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}
+
+{% block script %}
+    <script>
+        function onChangeStar() {
+            document.getElementById("{{ ADM_OPForm.star.id_for_label }}_value").innerHTML = document.getElementById("{{ ADM_OPForm.star.id_for_label }}").value;
+        }
+
+        function onChangeEffect() {
+            document.getElementById("{{ ADM_OPForm.effect.id_for_label }}_value").innerHTML = document.getElementById("{{ ADM_OPForm.effect.id_for_label }}").value;
+        }
+
+        function onChangeService() {
+            document.getElementById("{{ ADM_OPForm.service.id_for_label }}_value").innerHTML = document.getElementById("{{ ADM_OPForm.service.id_for_label }}").value;
+        }
+
+        function onChangeProf() {
+            document.getElementById("{{ ADM_OPForm.proficiency.id_for_label }}_value").innerHTML = document.getElementById("{{ ADM_OPForm.proficiency.id_for_label }}").value;
+        }
+
+    </script>
+{% endblock %}

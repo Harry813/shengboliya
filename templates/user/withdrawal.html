@@ -1,0 +1,258 @@
+{% extends "nav-bar.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+
+{% block css %}
+    <style>
+        .btn-outline-wechat {
+            color: #1AAD19;
+            border-color: #1AAD19;
+        }
+
+        .btn-outline-wechat:hover {
+            color: #fff;
+            background-color: #1AAD19;
+            border-color: #1AAD19;
+        }
+
+        .btn-check:focus + .btn-outline-wechat, .btn-outline-wechat:focus {
+            box-shadow: 0 0 0 0.25rem rgba(43, 162, 69, 0.5);
+        }
+
+        .btn-check:checked + .btn-outline-wechat, .btn-check:active + .btn-outline-wechat, .btn-outline-wechat:active, .btn-outline-wechat.active, .btn-outline-wechat.dropdown-toggle.show {
+            color: #fff;
+            background-color: #1AAD19;
+            border-color: #1AAD19;
+        }
+
+        .btn-check:checked + .btn-outline-wechat:focus, .btn-check:active + .btn-outline-wechat:focus, .btn-outline-wechat:active:focus, .btn-outline-wechat.active:focus, .btn-outline-wechat.dropdown-toggle.show:focus {
+            box-shadow: 0 0 0 0.25rem rgba(43, 162, 69, 0.5);
+        }
+
+        .btn-outline-wechat:disabled, .btn-outline-wechat.disabled {
+            color: #1AAD19;
+            background-color: transparent;
+        }
+
+        .btn-outline-alipay {
+            color: #027AFF;
+            border-color: #027AFF;
+        }
+
+        .btn-outline-alipay:hover {
+            color: #fff;
+            background-color: #027AFF;
+            border-color: #027AFF;
+        }
+
+        .btn-check:focus + .btn-outline-alipay, .btn-outline-alipay:focus {
+            box-shadow: 0 0 0 0.25rem rgba(22, 120, 255, 0.5);
+        }
+
+        .btn-check:checked + .btn-outline-alipay, .btn-check:active + .btn-outline-alipay, .btn-outline-alipay:active, .btn-outline-alipay.active, .btn-outline-alipay.dropdown-toggle.show {
+            color: #fff;
+            background-color: #027AFF;
+            border-color: #027AFF;
+        }
+
+        .btn-check:checked + .btn-outline-alipay:focus, .btn-check:active + .btn-outline-alipay:focus, .btn-outline-alipay:active:focus, .btn-outline-alipay.active:focus, .btn-outline-alipay.dropdown-toggle.show:focus {
+            box-shadow: 0 0 0 0.25rem rgba(22, 120, 255, 0.5);
+        }
+
+        .btn-outline-alipay:disabled, .btn-outline-alipay.disabled {
+            color: #027AFF;
+            background-color: transparent;
+        }
+    </style>
+{% endblock %}
+
+
+{% block content %}
+    <form novalidate method="post" class="card container-md py-4 px-3 mb-4" style="margin-top: 25px">
+        {% csrf_token %}
+        {% render_field form.applicator_id class="visually-hidden" value=uid %}
+        {% render_field form.method class="visually-hidden" %}
+        <div class="row g-3">
+            <div class="col-md-12 col-lg-8 offset-lg-2">
+                <h1 class="fs-3">提现中心</h1>
+            </div>
+            {% if form.amount.errors %}
+                <div class="col-md-12 col-lg-8 offset-lg-2 has-validation">
+                    <div class="invalid-feedback" id="{{ form.amount.id_for_label }}Feedback">
+                        {{ form.amount.errors.0 }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="col-md-12 col-lg-8 offset-lg-2 has-validation">
+                <div class="form-floating">
+                    {% if form.amount.errors %}
+                        {% render_field form.amount|add_class:"is-invalid form-control" placeholder="amount" %}
+                    {% elif validate and not form.amount.errors %}
+                        {% render_field form.amount|add_class:"is-valid form-control" placeholder="amount" %}
+                    {% else %}
+                        {{ form.amount }}
+                    {% endif %}
+                    <small style="color: grey">
+                        可提现金额: ¥<span style="font-size: 120%">{{ user.balance|floatformat:2 }}</span>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <a class="text-decoration-none" href="javascript:" id="withdrawal_all">全部提现</a>
+                    </small>
+                    <label for="{{ form.amount.id_for_label }}">{{ form.amount.label }}</label>
+                    {% if form.amount.errors %}
+                        <div class="invalid-feedback" id="{{ form.amount.id_for_label }}Feedback">
+                            {{ form.amount.errors.0 }}
+                        </div>
+                    {% else %}
+                        <br>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-12 col-lg-8 offset-lg-2 mt-5">
+                <h4>提现方式</h4>
+                <div class="row">
+                    <div class="col" id="bank">
+                        <input type="radio" class="btn-check" name="method-check" id="method_bank" autocomplete="off"
+                               checked>
+                        <label class="btn btn-outline-primary w-100" for="method_bank" id="bank-label">银行转账</label>
+                    </div>
+                    <div class="col" id="alipay">
+                        <input type="radio" class="btn-check" name="method-check" id="method_alipay" autocomplete="off">
+                        <label class="btn btn-outline-alipay w-100" for="method_alipay" id="alipay-label">支付宝</label>
+                    </div>
+                    <div class="col" id="wechat">
+                        <input type="radio" class="btn-check" name="method-check" id="method_wechat" autocomplete="off">
+                        <label class="btn btn-outline-wechat w-100" for="method_wechat" id="wechat-label">微信支付</label>
+                    </div>
+                </div>
+            </div>
+
+            {% if form.account.errors %}
+                <div class="col-md-12 col-lg-8 offset-lg-2 has-validation">
+                    <div class="invalid-feedback" id="{{ form.account.id_for_label }}Feedback">
+                        {{ form.account.errors.0 }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="col-md-12 col-lg-8 offset-lg-2 has-validation">
+                <div class="form-floating">
+                    {% if form.account.errors %}
+                        {% render_field form.account|add_class:"is-invalid form-control" placeholder="amount" %}
+                    {% elif validate and not form.account.errors %}
+                        {% render_field form.account|add_class:"is-valid form-control" placeholder="amount" %}
+                    {% else %}
+                        {{ form.account }}
+                    {% endif %}
+                    <small>
+                        <span style="color: grey; margin-right: 1rem">请确保账号正确</span>
+                        <span style="color: orangered; font-size: 60%">使用错误账号交易将无法追回，提现失败请联系客服</span>
+                    </small>
+                    <label for="{{ form.account.id_for_label }}">{{ form.account.label }}</label>
+                    {% if form.account.errors %}
+                        <div class="invalid-feedback" id="{{ form.account.id_for_label }}Feedback">
+                            {{ form.account.errors.0 }}
+                        </div>
+                    {% else %}
+                        <br>
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+                <div class="form-floating">
+                    <button class="form-control-lg btn btn-primary w-100" type="submit">提现</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="card container-md py-4 px-3 mb-4">
+        <div class="card-body">
+            {% for application in applications %}
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col"><p style="color:grey;">{{ application.create_date }}</p></div>
+                            <div class="col">
+                                <p class="text-success" style="float: right">
+                                    <span style="font-size: 0.8rem">¥ </span>
+                                    <span style="font-size: 1.2rem">{{ application.amount | floatformat:2 }}</span>
+                                </p>
+                            </div>
+                            <div class="mt-2">
+                                <div class="row">
+                                    <div class="col">
+                                        交易状态:
+                                        {% if application.status == 1 %}
+                                            <span class="badge bg-warning" style="color: black">已提交申请</span>
+                                        {% elif application.status == 2 %}
+                                            <span class="badge" style="background-color: darkorange; color: white">审核处理中</span>
+                                        {% elif application.status == 3 %}
+                                            <span class="badge" style="background-color: greenyellow; color: black">已放款，请查收</span>
+                                        {% elif application.status == 100 %}
+                                            <span class="badge bg-success">交易完成</span>
+                                        {% elif application.status == 101 %}
+                                            <span class="badge bg-secondary">交易取消</span>
+                                        {% elif application.status == 102 %}
+                                            <span class="badge bg-danger">审核失败</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="col">
+                                        <span style="float: right">收款方式:
+                                            {% if application.method == 1 %}
+                                                银行转账
+                                            {% elif application.method == 2 %}
+                                                支付宝
+                                            {% elif application.method == 3 %}
+                                                微信支付
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col">
+                                <span style="font-size: 0.4rem; color: grey">交易编号: {{ application.id }}</span>
+                            </div>
+                            <div class="col">
+                                <span style="font-size: 0.4rem; color: grey; float: right">最后更新: {{ application.update_date }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="text-center">
+                    <img class="pt-5" src="{% static 'images/no_record.png' %}" alt="No Record Found">
+                    <p class="py-3">暂无收入记录</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        $("#withdrawal_all").click(function () {
+            $("#{{ form.amount.id_for_label }}").val({{ user.balance }});
+        });
+
+        $("#method_bank").on("click", function () {
+            $("#{{ form.method.id_for_label }}").val(1);
+        });
+
+        $("#method_alipay").on("click", function () {
+            $("#{{ form.method.id_for_label }}").val(2);
+        });
+
+        $("#method_wechat").on("click", function () {
+            $("#{{ form.method.id_for_label }}").val(3);
+        });
+    </script>
+{% endblock %}

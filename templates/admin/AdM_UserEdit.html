@@ -1,0 +1,380 @@
+{% extends 'admin/ADM_Template.html' %}
+{% load widget_tweaks %}
+
+{% block board_title %}用户编辑{% endblock %}
+
+{% block css %}
+    <style>
+        .list-group-item.show-red.active {
+            z-index: 2;
+            color: #fff !important;
+            background-color: red;
+            border-color: red;
+        }
+    </style>
+{% endblock %}
+
+{% block board_content %}
+    <div class="row">
+        <div class="col">
+            <div class="row">
+                <div class="col-md-3 col-xl-2">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title mb-0 font-weight-bold">编辑账户</h3>
+                        </div>
+
+                        <div class="list-group list-group-flush" role="tablist">
+                            <a class="list-group-item list-group-item-action active" data-toggle="list"
+                               href="#account" role="tab" aria-selected="true">
+                                账户信息
+                            </a>
+                            <a class="list-group-item list-group-item-action" data-toggle="list" href="#relation"
+                               role="tab" aria-selected="false">
+                                用户关系
+                            </a>
+                            <a class="list-group-item list-group-item-action" data-toggle="list" href="#rebate"
+                               role="tab" aria-selected="false">
+                                佣金管理
+                            </a>
+                            <a class="list-group-item list-group-item-action" data-toggle="list" href="#withdrawal"
+                               role="tab" aria-selected="false">
+                                提现管理
+                            </a>
+                            <a class="list-group-item list-group-item-action show-red" style="color: red"
+                               data-toggle="list" href="#delete" role="tab" aria-selected="false">
+                                删除账户
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-9 col-xl-10">
+                    <div class="tab-content">
+                        {# 基础信息 #}
+                        <div class="tab-pane fade active show" id="account" role="tabpanel">
+                            <form class="row" method="post">
+                                {% csrf_token %}
+                                <div class="mb-0">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title mb-0 font-weight-bold">基础信息</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="mb-3">
+                                                    <label class="form-label"
+                                                           for="{{ ADM_UserForm_basic.nick.id_for_label }}">{{ ADM_UserForm_basic.nick.label }}</label>
+                                                    {% render_field ADM_UserForm_basic.nick class="form-control" %}
+                                                    <div>
+                                                        {% if ADM_UserForm_basic.nick.help_text %}
+                                                            <p class="small">{{ ADM_UserForm_basic.nick.help_text }}</p>
+                                                        {% elif ADM_UserForm_basic.nick.errors %}
+                                                            <p class="small"
+                                                               style="color: red;">{{ ADM_UserForm_basic.nick.errors.0 }}</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label"
+                                                           for="{{ ADM_UserForm_basic.email.id_for_label }}">{{ ADM_UserForm_basic.email.label }}</label>
+                                                    {% if targ_user.email %}
+                                                        <div class="input-group">
+                                                            {% render_field ADM_UserForm_basic.email class="form-control" %}
+                                                            <a href="mailto:{{ targ_user.email }}"
+                                                               class="btn btn-secondary">
+                                                                <i class="bi bi-envelope-fill"></i>
+                                                            </a>
+                                                        </div>
+                                                    {% else %}
+                                                        {% render_field ADM_UserForm_basic.email class="form-control" %}
+                                                    {% endif %}
+                                                </div>
+
+                                                <div class="col-md-6 mb-3">
+                                                    <label class="form-label"
+                                                           for="{{ ADM_UserForm_basic.tele.id_for_label }}">{{ ADM_UserForm_basic.tele.label }}</label>
+                                                    {% render_field ADM_UserForm_basic.tele class="form-control" %}
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label"
+                                                           for="{{ ADM_UserForm_basic.vip_lv.id_for_label }}">{{ ADM_UserForm_basic.vip_lv.label }}</label>
+                                                    {% render_field ADM_UserForm_basic.vip_lv class="form-control" %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title mb-0 font-weight-bold">实名状态</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            {% if targ_user.get_id_status %}
+                                                <p><i class="bi bi-check-circle-fill text-success mr-2"></i>已实名认证
+                                                </p>
+                                            {% else %}
+                                                <p><i class="bi bi-x-circle-fill text-danger mr-2"></i>未实名认证</p>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title mb-0 font-weight-bold">
+                                                账号信息
+                                            </h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="mb-3">
+                                                <p>
+                                                    用户名: {{ targ_user.username }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title mb-0 font-weight-bold">
+                                                帐号状态
+                                            </h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col-md">
+                                                    <p>上次登录时间: {{ targ_user.last_login }}</p>
+                                                </div>
+                                                <div class="col-md">
+                                                    <p>账户创建时间: {{ targ_user.date_joined }}</p>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <button type="submit" name="InfoChange" class="btn btn-primary w-100">保存修改
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                        {# 用户关系 #}
+                        <div class="tab-pane fade" id="relation" role="tabpanel">
+                            <div class="row">
+                                <div class="mb-0">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title mb-0 font-weight-bold">用户关系</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row w-100">
+                                                <div class="col">
+                                                    <label for="up_1"><strong>邀请人</strong></label>
+                                                    <div class="mt-2">
+                                                        {% if targ_user.invi_user %}
+                                                            <a id="up_1" class="text-decoration-none"
+                                                               href="{% url 'ADM_UserEdit' targ_user.invi_user.id %}">
+                                                                <i class="bi bi-person-fill"></i>&nbsp;&nbsp;{{ targ_user.invi_user.get_full_name }}
+                                                            </a>
+                                                        {% else %}
+                                                            <p>暂无</p>
+                                                        {% endif %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 mt-0">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title mb-0 font-weight-bold">已邀请</h3>
+                                        </div>
+
+                                        <div class="card-body">
+                                            <p style="font-size: 2.5rem">{{ targ_user_inv_count }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# 佣金管理 #}
+                        <div class="tab-pane fade" id="rebate" role="tabpanel">
+                            <div class="row">
+                                <div class="mb-0">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title mb-0 font-weight-bold">佣金管理</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p>账户余额</p>
+                                                    <p>¥ <span
+                                                            style="font-size: 2rem">{{ targ_user.balance | floatformat:2 }}</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title mb-0 font-weight-bold">分佣设置</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <form method="post">
+                                                {% csrf_token %}
+                                                {% if targ_user.invi_user %}
+                                                    <div class="row">
+                                                        <div class="col-md-6">
+                                                            <p><strong>上级用户 {{ targ_user.invi_user.get_full_name }} 将获得
+                                                                <i>10%</i></strong></p>
+                                                            <p>¥ <span style="font-size: 1.5rem"
+                                                                       id="targ-user-upperLv1">0.00</span></p>
+                                                        </div>
+                                                        {% if targ_user.invi_user.invi_user %}
+                                                            <div class="col-md-6">
+                                                                <p><strong>上上级用户 {{ targ_user.invi_user.invi_user.get_full_name }} 将获得 <i>5%</i></strong></p>
+                                                                <p>¥ <span style="font-size: 1.5rem"
+                                                                           id="targ-user-upperLv2">0.00</span></p>
+                                                            </div>
+                                                        {% endif %}
+                                                    </div>
+                                                {% endif %}
+                                                <div class="row">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label"
+                                                               for="{{ ADM_RebateForm.amount.id_for_label }}">{{ ADM_RebateForm.amount.label }}</label>
+                                                        {% render_field ADM_RebateForm.amount class="form-control" %}
+                                                        <div>
+                                                            {% if ADM_RebateForm.amount.help_text %}
+                                                                <p class="small">{{ ADM_RebateForm.amount.help_text }}</p>
+                                                            {% elif ADM_RebateForm.amount.errors %}
+                                                                <p class="small"
+                                                                   style="color: red;">{{ ADM_RebateForm.amount.errors.0 }}</p>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-6">
+                                                        <label class="form-label"
+                                                               for="{{ ADM_RebateForm.appointment.id_for_label }}">{{ ADM_RebateForm.appointment.label }}</label>
+                                                        {% render_field ADM_RebateForm.appointment class="form-control" %}
+                                                        <div>
+                                                            {% if ADM_RebateForm.appointment.help_text %}
+                                                                <p class="small">{{ ADM_RebateForm.appointment.help_text }}</p>
+                                                            {% elif ADM_RebateForm.appointment.errors %}
+                                                                <p class="small"
+                                                                   style="color: red;">{{ ADM_RebateForm.appointment.errors.0 }}</p>
+                                                            {% endif %}
+                                                        </div>
+                                                    </div>
+                                                
+                                                    <div class="mt-3">
+                                                        <label class="form-label" for="{{ ADM_RebateForm.note.id_for_label }}">{{ ADM_RebateForm.note.label }}</label>
+                                                        {% render_field ADM_RebateForm.note class="form-control" placeholder="非必填" %}
+                                                    </div>
+
+                                                    <div class="mt-3">
+                                                        <button type="submit" name="Rebate"
+                                                                class="btn btn-primary w-100">保存修改
+                                                        </button>
+                                                    </div>
+
+                                                    <div class="mt-3">
+                                                        {{ ADM_RebateForm.errors }}
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# 提现管理 #}
+                        <div class="tab-pane fade" id="withdrawal" role="tabpanel">
+                            <div class="row">
+                                <div class="mb-0">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title mb-0 font-weight-bold">提现管理</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row">
+                                                <div class="col">
+                                                    <p>账户冻结</p>
+                                                    <p>¥ <span
+                                                            style="font-size: 2rem">{{ targ_user.frozen | floatformat:2 }}</span>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-0">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <h3 class="card-title mb-0 font-weight-bold">提现操作</h3>
+                                        </div>
+                                        <div class="card-body">
+                                            <a href="#">前往提现</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        {# 删除账户 #}
+                        <div class="tab-pane fade" id="delete" role="tabpanel">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h5 class="card-title">删除账户</h5>
+                                    <form>
+                                        <div class="mb-3">
+                                            <label class="form-label" for="inputDeleteConfirm">
+                                                请输入“<strong style="color: red">删除</strong>”或“<strong
+                                                    style="color: red">Delete</strong>”已确认删除！
+                                            </label>
+                                            <input type="text" class="form-control" id="inputDeleteConfirm">
+                                        </div>
+
+                                        <div class="mb-3 mt-4">
+                                            <button type="submit" class="btn btn-danger w-100" id="buttonDeleteConfirm">
+                                                确认删除
+                                            </button>
+                                        </div>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $("#{{ ADM_RebateForm.amount.id_for_label }}").bind("input propertychange", function (event) {
+            let rebate_amount = $("#{{ ADM_RebateForm.amount.id_for_label }}").val()
+            $("#targ-user-upperLv1").text((Number(rebate_amount) * 0.1).toFixed(2))
+            $("#targ-user-upperLv2").text((Number(rebate_amount) * 0.05).toFixed(2))
+        });
+    </script>
+{% endblock %}

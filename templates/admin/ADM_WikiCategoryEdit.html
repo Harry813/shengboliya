@@ -1,0 +1,112 @@
+{% extends 'admin/ADM_Template.html' %}
+{% load widget_tweaks %}
+
+{% block board_title %}管理百科类目-编辑{% endblock %}
+
+{% block board_content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0 font-weight-bold">基础信息</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_WikiCateForm.name.id_for_label }}">{{ ADM_WikiCateForm.name.label }}</label>
+                                {% render_field ADM_WikiCateForm.name class="form-control" %}
+                                <div>
+                                    {% if ADM_WikiCateForm.name.help_text %}
+                                        <p class="small">{{ ADM_WikiCateForm.name.help_text }}</p>
+                                    {% elif ADM_WikiCateForm.name.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_WikiCateForm.name.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_WikiCateForm.code.id_for_label }}">{{ ADM_WikiCateForm.code.label }}</label>
+                                {% render_field ADM_WikiCateForm.code class="form-control" %}
+                                <div>
+                                    {% if ADM_WikiCateForm.code.help_text %}
+                                        <p class="small">{{ ADM_WikiCateForm.code.help_text }}</p>
+                                    {% elif ADM_WikiCateForm.code.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_WikiCateForm.code.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0 font-weight-bold">父类项目</h3>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_WikiCateForm.father.id_for_label }}">{{ ADM_WikiCateForm.father.label }}</label>
+                                {% render_field ADM_WikiCateForm.father class="form-control" %}
+                                <div>
+                                    {% if ADM_WikiCateForm.father.help_text %}
+                                        <p class="small">{{ ADM_WikiCateForm.father.help_text }}</p>
+                                    {% elif ADM_WikiCateForm.father.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_WikiCateForm.father.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <button type="submit" class="btn btn-primary w-100">保存修改</button>
+                            </div>
+
+                            <div class="col-md-6">
+                                <a href="#" class="btn btn-danger w-100">删除类目</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if ADM_WikiCateForm.errors %}
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title mb-0 font-weight-bold text-danger">ERROR</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul>
+                                {% for e in ADM_WikiCateForm.errors %}
+                                    <li>{{ e }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </form>
+{% endblock %}

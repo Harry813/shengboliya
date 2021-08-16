@@ -1,0 +1,183 @@
+{% extends "nav-bar.html" %}
+{% load static %}
+
+{% block css %}
+
+{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+
+        <div class="row mt-3">
+            <div class="col">
+                <h1 style="color: black">推广</h1>
+            </div>
+        </div>
+        <div class="row mt-2">
+            <div class="col">
+                <a class="card shadow text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#notice">
+                    <div class="card-body border-0 text-center">
+                        <img src="{% static 'images/icons/cascades.png' %}" alt="成功案例"
+                             style="width: 60%; max-width: 64px">
+                        <p style="font-size: .875rem">成功案例</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col">
+                <a class="card shadow text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#notice">
+                    <div class="card-body border-0 text-center">
+                        <img src="{% static 'images/icons/customer_service.png' %}" alt="人工咨询"
+                             style="width: 60%; max-width: 64px">
+                        <p style="font-size: .875rem">人工咨询</p>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col">
+                <a class="card shadow text-decoration-none" href="#" data-bs-toggle="modal" data-bs-target="#notice">
+                    <div class="card-body border-0 text-center">
+                        <img src="{% static 'images/icons/sales.png' %}" alt="销售助销"
+                             style="width: 60%; max-width: 64px">
+                        <p style="font-size: .875rem">销售助销</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col">
+                <h3 style="color: black">使用指南</h3>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-header bg-primary border-0 text-white">使用指南
+                    </div>
+                    <div class="card-body bg-primary border-0 text-white">
+                        <div class="row">
+                            <div class="col">权威解读 了解我们</div>
+                            <div class="col align-content-end small">
+                                <a href="{% url 'partnerRule' %}" style="color: white; float: right">查看详情<i
+                                        class="bi bi-chevron-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0">
+                        <div class="row">
+                            <div class="col">
+                                <a href="{% static 'images/become_customer.jpg' %}" style="font-size: .75rem"><i class="bi bi-chevron-right"></i>招募代理</a>
+                            </div>
+                            <div class="col">
+                                <a href="{% static 'images/upgrade.jpg' %}" style="font-size: .75rem"><i class="bi bi-chevron-right"></i>合伙人升级</a>
+                            </div>
+                            <div class="col">
+                                <a href="{% static 'images/appointment.jpg' %}" style="font-size: .75rem"><i class="bi bi-chevron-right"></i>医院预约</a>
+                            </div>
+                            <div class="col">
+                                <a href="{% static 'images/withdraw.jpg' %}" style="font-size: .75rem"><i class="bi bi-chevron-right"></i>提现</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-3 mx-3">
+            <h3 class="mb-3">精选发现</h3>
+            <div id="promoCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="{% static 'images/promo1.jpg' %}" class="d-block w-100" alt="精选推荐1" style="max-height: 25rem">
+                    </div>
+                    <div class="carousel-item">
+                        <a href="{% static 'images/customer_service_QR.jpg' %}"><img src="{% static 'images/promo2.jpg' %}" class="d-block w-100" alt="精选推荐2" style="max-height: 25rem"></a>
+                    </div>
+                    <div class="carousel-item">
+                        <img src="{% static 'images/promo3.jpg' %}" class="d-block w-100" alt="精选推荐3" style="max-height: 25rem">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4">
+            <div class="col" id="">
+                <script type="text/javascript">
+                    let marqueeContent = [];
+                    marqueeContent[0] = "<span> 恭喜用户 181****0257 完成交易</span>";
+                    marqueeContent[1] = "<span> 恭喜用户 181****0257 完成交易</span>";
+                    marqueeContent[2] = "<span> 恭喜用户 181****0257 完成交易</span>";
+                    marqueeContent[3] = "<span> 恭喜用户 181****0257 完成交易</span>";
+                    let marqueeInterval = [];
+                    let marqueeId = 0;
+                    let marqueeDelay = 2000;
+                    let marqueeHeight = 25;
+
+                    function initMarquee() {
+                        let str = marqueeContent[0];
+                        document.write('<div class="text-center" id="marqueeBox" style="overflow:hidden;width:100%;height:' + marqueeHeight + 'px" οnmοuseοver="clearInterval(marqueeInterval[0])" οnmοuseοut="marqueeInterval[0]=setInterval(\'startMarquee()\',marqueeDelay)"><div>' + str + '</div></div>');
+                        marqueeId++;
+                        marqueeInterval[0] = setInterval("startMarquee()", marqueeDelay);
+                    }
+
+                    function startMarquee() {
+                        let str = marqueeContent[marqueeId];
+                        marqueeId++;
+                        if (marqueeId >= marqueeContent.length) marqueeId = 0;
+                        if (document.getElementById("marqueeBox").childNodes.length === 1) {
+                            let nextLine = document.createElement('DIV');
+                            nextLine.innerHTML = str;
+                            document.getElementById("marqueeBox").appendChild(nextLine);
+                        } else {
+                            document.getElementById("marqueeBox").childNodes[0].innerHTML = str;
+                            document.getElementById("marqueeBox").appendChild(document.getElementById("marqueeBox").childNodes[0]);
+                            document.getElementById("marqueeBox").scrollTop = 0;
+                        }
+                        clearInterval(marqueeInterval[1]);
+                        marqueeInterval[1] = setInterval("scrollMarquee()", 20);
+                    }
+
+                    function scrollMarquee() {
+                        document.getElementById("marqueeBox").scrollTop++;
+                        if (document.getElementById("marqueeBox").scrollTop % marqueeHeight === (marqueeHeight - 1)) {
+                            clearInterval(marqueeInterval[1]);
+                        }
+                    }
+
+                    initMarquee();
+                </script>
+            </div>
+        </div>
+
+        <div style="height: 100px; color: white"></div>
+
+    </div>
+
+
+    <div class="modal fade" id="notice" tabindex="-1" aria-labelledby="noticeLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="noticeLabel">提示</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    功能正在赶来中~
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block script %}
+{% endblock %}

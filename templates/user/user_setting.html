@@ -1,0 +1,30 @@
+{% extends "nav-bar.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container-md">
+        <div class="row">
+            <h1 class="mt-3" style="font-size: large; font-weight: bold">个人信息</h1>
+            <div class="mb-3">
+                <div class="list-group list-group-flush">
+                    <a href="#" class="list-group-item list-group-item-action">修改个人资料</a>
+                </div>
+            </div>
+            <h1 class="mt-3" style="font-size: large; font-weight: bold">安全设置</h1>
+            <div class="mb-3">
+                <div class="list-group list-group-flush">
+                    {% if user.get_id_status %}
+                        <a href="{% url 'verify' %}"
+                           class="list-group-item list-group-item-action">实名认证&nbsp;&nbsp;<span
+                                class="badge bg-success">已认证</span></a>
+                    {% else %}
+                        <a class="list-group-item list-group-item-action">实名认证&nbsp;&nbsp;<span class="badge bg-danger">未认证</span></a>
+                    {% endif %}
+                    <a href="#" class="list-group-item list-group-item-action">绑定手机</a>
+                    <a href="#" class="list-group-item list-group-item-action">绑定邮箱</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

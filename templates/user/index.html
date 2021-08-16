@@ -1,0 +1,97 @@
+{% extends "nav-bar.html" %}
+{% load static %}
+
+{% block content %}
+    <div class="container mt-3">
+        <div class="row">
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    {% for pic in pic_list %}
+                        <button type="button" data-bs-target="#carouselExampleIndicators"
+                                data-bs-slide-to="{{ forloop.counter0 }}"
+                                {% if forloop.counter0 == 0 %}class="active" aria-current="true"{% endif %}
+                                aria-label="Slide {{ forloop.counter0 }}"></button>
+                    {% endfor %}
+                </div>
+                <div class="carousel-inner">
+                    {% for pic in pic_list %}
+                        <div class="carousel-item {% if forloop.counter0 == 0 %}active{% endif %}">
+                            <a href="{{ pic.link }}">
+                                <img src="{% static pic.url %}" class="d-block w-100 img-fluid" style="min-height: 35vh"
+                                     alt="{{ pic.description }}">
+                                {% if pic.title != "" and pic.description != "" %}
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>{{ pic.title }}</h5>
+                                        <p>{{ pic.description }}</p>
+                                    </div>
+                                {% endif %}
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators"
+                        data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <br>
+
+    <div class="container-fluid">
+        <h3>医院链接</h3>
+        <div class="row">
+            <div class="col">
+                <a href="{% url "static_hospital" 1 %}" class="card">
+                    <div class="card-body text-decoration-none" style="color: black">
+                        星美姿
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{% url "static_hospital" 2 %}" class="card">
+                    <div class="card-body text-decoration-none" style="color: black">
+                        上海苪雅
+                    </div>
+                </a>
+            </div>
+            <div class="col">
+                <a href="{% url "static_hospital" 3 %}" class="card">
+                    <div class="card-body text-decoration-none" style="color: black">
+                        镜面医疗
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <h3 class="mt-3">预约</h3>
+        <div class="row">
+            <div class="col-4">
+                <a href="{% url "appointments" %}" class="card">
+                    <div class="card-body text-decoration-none" style="color: black">
+                        预约
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <h3 class="mt-3">后台</h3>
+        <div class="row">
+            <div class="col-4">
+                <a href="{% url "ADM_Index" %}" class="card">
+                    <div class="card-body text-decoration-none" style="color: black">
+                        主页
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

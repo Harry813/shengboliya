@@ -1,0 +1,214 @@
+{% extends "nav-bar.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load user_tags %}
+
+{% block css %}
+    <style>
+        .box {
+            margin: auto;
+            position: relative;
+            width: 3.5rem;
+            height: 3.5rem;
+            border-radius: 10%;
+        }
+
+        .box-digit {
+            line-height: 3.5rem;
+            text-align: center;
+        }
+
+        .bg-grad-blue {
+            background-image: linear-gradient(#4bb5e7, #39a5d3)
+        }
+
+        .bg-grad-purple {
+            background-image: linear-gradient(#785be7, #434ad6)
+        }
+
+        .licerti {
+            width: 100%;
+            max-height: 20rem;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="mt-5">
+                <div class="card">
+                    <div class="card-body mt-3 mx-3">
+                        <div class="card-title">
+                            <span class="fs-4">{{ op.name }}</span>
+                            {% if op.verified %}
+                                <span class="badge rounded-pill" style="background-color: forestgreen;">已认证</span>
+                            {% endif %}
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                {% autoescape off %}
+                                    {{ op.star|star }}
+                                {% endautoescape %}
+                                <span style="margin-left: 4px">效果 {{ op.effect }}  服务 {{ op.service }}  专业 {{ op.proficiency }}</span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col">
+                                <a class="text-decoration-none" style="color:#000;" href="#op_lice_cert"
+                                    aria-expanded="false" aria-controls="op_lice_cert" data-bs-toggle="collapse">严选保障 资质认证 >
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="collapse" id="op_lice_cert">
+                                <div class="card card-body">
+                                    {% if op.oper_certificate or op.oper_license %}
+                                        {% if op.oper_license %}
+                                            <div class="col">
+                                                <img class="licerti" src="{{ op.oper_license }}" alt="营业执照">
+                                            </div>
+                                        {% endif %}
+
+                                        {% if op.oper_certificate %}
+                                            <div class="col">
+                                                <img class="licerti" src="{{ op.oper_certificate }}" alt="医疗许可证">
+                                            </div>
+                                        {% endif %}
+                                    {% else %}
+                                        尚未上传
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row my-3">
+                            <div class="mt-2">
+                                <p>联系方式: {{ op.tele }}</p>
+                            </div>
+                        </div>
+
+                        <div style="display:flex;justify-content:space-between">
+                            {% if op.address %}
+                                <p style="color: grey">
+                                    {% if op.province %}{{ op.province }} {% endif %}
+                                    {% if op.city %}{{ op.city }} {% endif %}
+                                    {{ op.address }}
+                                </p>
+                            {% endif %}
+
+                            <button class="btn btn-primary text-right" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#customerServiceQR" aria-expanded="false"
+                                    aria-controls="customerServiceQR"><i class="bi bi-telephone"></i> 联系客服
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="card-footer collapse multi-collapse" id="customerServiceQR"
+                         style="background-color: transparent">
+                        <div class="row m-3">
+                            <div class="col">
+                                <img src="{% static 'images/customer_service_QR.jpg' %}" alt="客服二维码"
+                                     style="max-height: 10rem">
+                            </div>
+                            <div class="col">
+                                <p>微信扫码添加客服，了解更多详情</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5" style="display:flex;justify-content:space-between">
+                <h3>佣金结算说明</h3>
+                <a href="{% url 'partnerRule' %}" class="btn small">查看详情<i class="bi bi-chevron-right"></i></a>
+            </div>
+
+            <div class="mt-2">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col" style="text-align:center">
+                                <div class="fs-5 mt-2"><strong>一级合伙人</strong></div>
+                                <div><strong>获得</strong></div>
+                                <div class="fs-1" style="color: #39a5d3"><strong>{{ op.rebate_lv1 }}%</strong></div>
+                                <div><strong>返佣</strong></div>
+                            </div>
+
+                            <div class="col" style="text-align:center;">
+                                <div class="fs-5 mt-2"><strong>二级合伙人</strong></div>
+                                <div><strong>获得</strong></div>
+                                <div class="fs-1" style="color: #434ad6"><strong>{{ op.rebate_lv2 }}%</strong></div>
+                                <div><strong>返佣</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <h3 class="mt-5">分佣结算说明</h3>
+            <div class="mt-2">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row mt-2">
+                            <div style="display:flex;justify-content:space-between">
+                                <p class="text-black-50"><strong>当您的下级合伙人完成推广</strong></p>
+                                <a href="#" class="btn small">查看详情<i class="bi bi-chevron-right"></i></a>
+                            </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col" style="text-align:center; border-right: 1px solid #c0c4cc">
+                                <div class="text-white bg-grad-blue box" style=""><h1 class="box-digit">1</h1></div>
+                                <div class="fs-5 mt-2"><strong>获得下级</strong></div>
+                                <div><strong>总收入</strong></div>
+                                <div class="fs-1" style="color: #39a5d3"><strong>10%</strong></div>
+                                <div><strong>收入奖励</strong></div>
+                            </div>
+
+                            <div class="col" style="text-align:center;">
+                                <div class="text-white bg-grad-purple box" style=""><h1 class="box-digit">2</h1></div>
+                                <div class="fs-5 mt-2"><strong>获得下下级</strong></div>
+                                <div><strong>总收入</strong></div>
+                                <div class="fs-1" style="color: #434ad6"><strong>5%</strong></div>
+                                <div><strong>收入奖励</strong></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {% if op.description %}
+                <div class="mt-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="card-title">
+                                <strong>医院简介</strong>
+                            </div>
+
+                            <p class="card-text">
+                                {{ op.description }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="row px-3 pb-2 g-1 fixed-bottom bg-white">
+            <div class="col">
+                <a href="{% url 'OPappointments' op.id %}" class="btn text-white"
+                   style="background-color: palevioletred; height: 4rem;line-height: 4rem; display: block;">我要预约</a>
+            </div>
+            <div class="col">
+                <button class="btn text-white w-100" onclick="setClipboard('请点击下方链接进行注册: https://draw.hanxiaofei.tk/register/inv={{ inv_code }}')"
+                   style="background-color: dodgerblue; height: 4rem;line-height: 4rem; display: block;">招募代理</button>
+            </div>
+        </div>
+    </div>
+    <div style="height: 100px; color: white">
+    </div>
+{% endblock %}

@@ -1,0 +1,237 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title }}</title>
+    {% block frame %}
+        <link rel="stylesheet" href="{% static 'bs5/css/bootstrap.css' %}">{% endblock %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+    {% block css %}{% endblock %}
+    <style>
+
+
+        .hewarp li {
+            float: left;
+            padding: 0 5px;
+            text-align: center;
+            margin: 0 auto;
+        }
+
+        .hewarp li a, .hewarp li span {
+            display: block;
+            font-size: 11px;
+            height: 45px;
+            width: 100%;
+            /* line-height:80px; */
+        }
+
+        .hewarp li img {
+            width: 25px;
+            display: block;
+            margin: 0 auto;
+            padding-top: 2px;
+        }
+    </style>
+</head>
+<body>
+{% if bottom_nav %}
+    <div class="hewarp fixed-bottom bg-light">
+        <ul class="row" style="list-style: none; margin: 10px 0; padding: 0">
+            <li class="col">
+                <a href="{% url 'home' %}" title="首页" style="text-decoration: none; color: #333">
+                    <img src="{% static 'images\icons\home.png' %}" alt="医院标签"/> 医院
+                </a>
+            </li>
+
+            <li class="col">
+                <a href="{% url 'promote' %}" title="百科" style="text-decoration: none; color: #333">
+                    <img src="{% static 'images\icons\promote.png' %}" alt="推广标签"/> 推广
+                </a>
+            </li>
+
+            <li class="col">
+                <a href="{% url 'wiki' %}" title="百科" style="text-decoration: none; color: #333">
+                    <img src="{% static 'images\icons\wiki.png' %}" alt="百科标签"/> 百科
+                </a>
+            </li>
+
+            <li class="col">
+                <a href="{% url 'profile' %}" title="我的" style="text-decoration: none; color: #333">
+                    <img src="{% static 'images\icons\account.png' %}" alt="我的标签"/> 我的
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    {% if toast_list %}
+        <div aria-live="polite" aria-atomic="true" class="position-relative">
+            <div class="toast-container position-fixed bottom-100 end-100 p-3">
+                {% for t in toast_list %}
+                    {% if t.ty == 1 %}
+                        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true"
+                             data-bs-delay="{{ t.time }}">
+                            <div class="toast-header">
+                                {% if t.image %}
+                                    <img src="{{ t.image }}" class="rounded me-2" alt="{{ t.image_alt }}">
+                                {% endif %}
+                                <strong class="me-auto">{{ t.title }}</strong>
+                                {% if t.side_message %}
+                                    <small class="text-muted">{{ t.side_message }}</small>
+                                {% endif %}
+                                <button type="button" class="btn-close" data-bs-dismiss="toast"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                {{ t.message }}
+                            </div>
+                        </div>
+
+                    {% elif t.ty == 2 %}
+                        <div class="toast align-items-center text-white {% if t.color %}bg-{{ t.color }}{% endif %} border-0"
+                             role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="{{ t.time }}">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    {{ t.message }}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                        data-bs-dismiss="toast"
+                                        aria-label="Close"></button>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+
+            </div>
+        </div>
+    {% endif %}
+{% else %}
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <img src="{% static info.brand_image %}" alt="" width="30" height="30"
+                     class="d-inline-block align-top">
+                {{ info.brand_title }}
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarContent" aria-controls="navbarContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_page == "home" %} active {% endif %}" aria-current="page"
+                           href="{% url 'home' %}">
+                            <span class="bi bi-house{% if active_page == "home" %}-fill{% endif %} " width="15"
+                                  height="15"></span> 首页
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link {% if active_page == "wiki" %} active {% endif %}" aria-current="page"
+                           href="{% url 'wiki' %}">
+                            <span class="bi bi-book{% if active_page == "wiki" %}-half{% endif %}" width="15"
+                                  height="15"></span> 百科
+                        </a>
+                    </li>
+
+                    {% if user is None %}
+                        <li class="nav-item {% if active_page == "login" %} active {% endif %}">
+                            <a class="nav-link " href="{% url 'login' %}">
+                                <span class="bi bi-person{% if active_page == "login" %}-fill{% endif %}" width="15"
+                                      height="15"></span> 登录
+                            </a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item dropdown" style="z-index: 10">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                               data-bs-toggle="dropdown" aria-expanded="false">
+                                <span class="bi bi-people" width="15" height="15"></span> 用户中心
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="{% url 'profile' %}">我的首页</a></li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" href="{% url 'logout' %}"><i
+                                        class="bi bi-box-arrow-left"></i>
+                                    注销</a></li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {% if toast_list %}
+        <div aria-live="polite" aria-atomic="true" class="position-relative">
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                {% for t in toast_list %}
+                    {% if t.ty == 1 %}
+                        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true"
+                             data-bs-delay="{{ t.time }}">
+                            <div class="toast-header">
+                                {% if t.image %}
+                                    <img src="{{ t.image }}" class="rounded me-2" alt="{{ t.image_alt }}">
+                                {% endif %}
+                                <strong class="me-auto">{{ t.title }}</strong>
+                                {% if t.side_message %}
+                                    <small class="text-muted">{{ t.side_message }}</small>
+                                {% endif %}
+                                <button type="button" class="btn-close" data-bs-dismiss="toast"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                {{ t.message }}
+                            </div>
+                        </div>
+                    {% elif t.ty == 2 %}
+                        <div class="toast align-items-center text-white {% if t.color %}bg-{{ t.color }}{% endif %} border-0"
+                             role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="{{ t.time }}">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    {{ t.message }}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                        data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% endif %}
+
+{% block content %}{% endblock %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="{% static 'bs5/js/bootstrap.js' %}"></script>
+<script type="text/javascript">
+    let toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    let toastList = toastElList.map(function (toastEl) {
+        return new bootstrap.Toast(toastEl)
+    })
+    toastList.forEach(function (t) {
+        t.show()
+    })
+
+    function setClipboard(text) {
+        let input = document.body.appendChild(document.createElement("input"));
+        input.value = text;
+        input.focus();
+        input.select();
+        document.execCommand('copy');
+        input.parentNode.removeChild(input);
+        alert("复制成功，赶快分享吧！")
+    }
+</script>
+{% block script %}{% endblock %}
+</body>
+</html>
+
+{# TODO: 增加百科页面入口 #}

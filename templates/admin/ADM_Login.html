@@ -1,0 +1,71 @@
+{% extends "admin/ADM_base.html" %}
+{% load widget_tweaks %}
+
+
+{% block content %}
+<div style="margin:auto;">
+    <form novalidate method="post" class="card container-md py-4 px-3 my-4">
+        {% csrf_token %}
+        <div style="text-align:center;">
+            <h1>管理面板-登录</h1>
+            <br>
+        </div>
+
+        <div class="row g-3">
+            {% if form.username.errors %}
+                <div class="col-md-12 col-lg-8 offset-lg-2 has-validation">
+                    <div class="invalid-feedback" id="{{ form.username.id_for_label }}Feedback">
+                        {{ form.username.errors.0 }}
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="col-md-12 col-lg-8 offset-lg-2 has-validation">
+                <div class="form-floating">
+                    {% if form.username.errors %}
+                        {% render_field form.username|add_class:"is-invalid" %}
+                    {% elif validate and not form.username.errors %}
+                        {% render_field form.username|add_class:"is-valid" %}
+                    {% else %}
+                        {{ form.username }}
+                    {% endif %}
+                    <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                    {% if form.username.errors %}
+                        <div class="invalid-feedback" id="{{ form.username.id_for_label }}Feedback">
+                            {{ form.username.errors.0 }}
+                        </div>
+                    {% else %}
+                        <br>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-12 col-lg-8 offset-lg-2 has-validation">
+                <div class="form-floating">
+                    {% if form.paswd.errors %}
+                        {% render_field form.paswd|add_class:"is-invalid" %}
+                    {% elif validate and not form.paswd.errors %}
+                        {% render_field form.paswd|add_class:"is-valid" %}
+                    {% else %}
+                        {{ form.paswd }}
+                    {% endif %}
+                    <label for="{{ form.paswd.id_for_label }}">{{ form.paswd.label }}</label>
+                    {% if form.paswd.errors %}
+                        <div class="invalid-feedback" id="{{ form.paswd.id_for_label }}Feedback">
+                            {{ form.paswd.errors.0 }}
+                        </div>
+                    {% else %}
+                        <br>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
+                <div class="form-floating">
+                    <button class="form-control-lg btn btn-primary w-100" type="submit">登录</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

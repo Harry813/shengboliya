@@ -1,0 +1,159 @@
+{% extends "nav-bar.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+    <form novalidate method="post" class="card container-md py-4 px-3 mb-4" style="margin-top: 25px">
+        {% csrf_token %}
+        <div class="row g-3">
+            <div class="col-12">
+                <div class="form-floating">
+                    {% if form.username.errors %}
+                        {% render_field form.username|add_class:"is-invalid" %}
+                    {% elif validate and not form.username.errors %}
+                        {% render_field form.username|add_class:"is-valid" %}
+                    {% else %}
+                        {{ form.username }}
+                    {% endif %}
+                    <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+                    {% if form.username.errors %}
+                        <div class="invalid-feedback" id="{{ form.username.id_for_label }}Feedback">
+                            {{ form.username.errors.0 }}
+                        </div>
+                    {% elif form.username.help_text %}
+                        <span class="text-black-50">{{ form.username.help_text|linebreaks }}</span>
+                    {% else %}
+                        <p></p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="{# col-lg-7 col-md-12 #}col-12">
+                <div class="form-floating">
+                    {% if form.tele.errors %}
+                        {% render_field form.tele|add_class:"is-invalid" %}
+                    {% elif validate and not form.tele.errors %}
+                        {% render_field form.tele|add_class:"is-valid" %}
+                    {% else %}
+                        {{ form.tele }}
+                    {% endif %}
+                    <label for="{{ form.tele.id_for_label }}">{{ form.tele.label }}</label>
+                    {% if form.tele.errors %}
+                        <div class="invalid-feedback">
+                        {% autoescape off %}
+                            {{ form.tele.errors.0 }}
+                        {% endautoescape %}
+                        </div>
+                    {% elif form.tele.help_text %}
+                        <p class="text-black-50 small">{{ form.tele.help_text|linebreaksbr }}</p>
+                    {% else %}
+                        <p></p>
+                    {% endif %}
+                </div>
+            </div>
+
+{#            <div class="col-lg-5 col-md-12">#}
+{#                <div class="form-floating">#}
+{#                    {% if form.veri_code.errors %}#}
+{#                        {% render_field form.veri_code|add_class:"is-invalid" %}#}
+{#                    {% elif validate and not form.veri_code.errors %}#}
+{#                        {% render_field form.veri_code|add_class:"is-valid" %}#}
+{#                    {% else %}#}
+{#                        {{ form.veri_code }}#}
+{#                    {% endif %}#}
+{#                    <label for="{{ form.veri_code.id_for_label }}">{{ form.veri_code.label }}</label>#}
+{#                    {% if form.veri_code.errors %}#}
+{#                        <div class="invalid-feedback">#}
+{#                            {{ form.veri_code.errors.0 }}#}
+{#                        </div>#}
+{#                    {% elif form.veri_code.help_text %}#}
+{#                        <p class="text-black-50">{{ form.veri_code.help_text }}</p>#}
+{#                    {% else %}#}
+{#                        <p></p>#}
+{#                    {% endif %}#}
+{#                </div>#}
+{#            </div>#}
+
+            <div class="w-100 d-md-block d-lg-none">
+                <hr>
+            </div>
+
+            <div class="col-md-12 col-lg-6">
+                <div class="form-floating">
+                    {% if form.paswd1.errors %}
+                        {% render_field form.paswd1|add_class:"is-invalid" %}
+                    {% elif validate and not form.paswd1.errors %}
+                        {% render_field form.paswd1|add_class:"is-valid" %}
+                    {% else %}
+                        {% render_field form.paswd1 type="password" %}
+                    {% endif %}
+                    <label for="{{ form.paswd1.id_for_label }}">{{ form.paswd1.label }}</label>
+                    {% if form.paswd1.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.paswd1.errors.0 }}
+                        </div>
+                    {% elif form.paswd1.help_text %}
+                        <p class="text-black-50">{{ form.paswd1.help_text|linebreaksbr }}</p>
+                    {% else %}
+                        <p></p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-12 col-lg-6">
+                <div class="form-floating">
+                    {% if form.paswd2.errors %}
+                        {% render_field form.paswd2|add_class:"is-invalid" %}
+                    {% elif validate and not form.paswd2.errors %}
+                        {% render_field form.paswd2|add_class:"is-valid" %}
+                    {% else %}
+                        {{ form.paswd2 }}
+                    {% endif %}
+                    <label for="{{ form.paswd2.id_for_label }}">{{ form.paswd2.label }}</label>
+                    {% if form.paswd2.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.paswd2.errors.0 }}
+                        </div>
+                    {% elif form.paswd2.help_text %}
+                        <p class="text-black-50">{{ form.paswd2.help_text }}</p>
+                    {% else %}
+                        <p></p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="w-100 d-md-block d-lg-none">
+                <hr>
+            </div>
+
+            <div class="col-12">
+                <div class="form-floating">
+                    {% if form.invi_code.errors %}
+                        {% render_field form.invi_code value=invi_code class+="is-invalid" %}
+                    {% elif validate and not form.invi_code.errors %}
+                        {% render_field form.invi_code value=invi_code class+="is-valid" %}
+                    {% else %}
+                        {% render_field form.invi_code value=invi_code %}
+                    {% endif %}
+                    <label for="{{ form.invi_code.id_for_label }}">{{ form.invi_code.label }}</label>
+                    {% if form.invi_code.errors %}
+                        <div class="invalid-feedback">
+                            {{ form.invi_code.errors.0 }}
+                        </div>
+                    {% elif form.invi_code.help_text %}
+                        <p class="text-black-50">{{ form.invi_code.help_text }}</p>
+                    {% else %}
+                        <p></p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="col-md-12 col-lg-8 offset-lg-2">
+                <div class="form-floating">
+                    <button class="form-control-lg btn btn-primary w-100" type="submit">注册</button>
+                    <p style="text-align: center">已有帐号？请前往<a href='{% url "login" %}'>登录</a></p>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+

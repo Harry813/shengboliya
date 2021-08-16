@@ -1,0 +1,231 @@
+{% extends 'admin/ADM_Template.html' %}
+{% load widget_tweaks %}
+
+{% block board_title %}管理百科类目-编辑{% endblock %}
+
+{% block board_content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0 font-weight-bold">基础信息</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_WikiItemForm.name.id_for_label }}">{{ ADM_WikiItemForm.name.label }}</label>
+                                {% render_field ADM_WikiItemForm.name class="form-control" %}
+                                <div>
+                                    {% if ADM_WikiItemForm.name.help_text %}
+                                        <p class="small">{{ ADM_WikiItemForm.name.help_text }}</p>
+                                    {% elif ADM_WikiItemForm.name.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_WikiItemForm.name.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_WikiItemForm.code.id_for_label }}">{{ ADM_WikiItemForm.code.label }}</label>
+                                {% render_field ADM_WikiItemForm.code class="form-control" %}
+                                <div>
+                                    {% if ADM_WikiItemForm.code.help_text %}
+                                        <p class="small">{{ ADM_WikiItemForm.code.help_text }}</p>
+                                    {% elif ADM_WikiItemForm.code.errors %}
+                                        <p class="small" style="color: red;">{{ ADM_WikiItemForm.code.errors.0 }}</p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.price.id_for_label }}">
+                                    {{ ADM_WikiItemForm.price.label }}</label>
+                                {% render_field ADM_WikiItemForm.price class="form-control" %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.category.id_for_label }}">
+                                    {{ ADM_WikiItemForm.category.label }}</label>
+                                {% render_field ADM_WikiItemForm.category class="form-control" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0 font-weight-bold">项目评分</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.attention.id_for_label }}">
+                                    {{ ADM_WikiItemForm.attention.label }}</label>
+                                {% render_field ADM_WikiItemForm.attention type="range" class="form-range" min="0" max="5" step=1 %}
+
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.secure.id_for_label }}">
+                                    {{ ADM_WikiItemForm.secure.label }}</label>
+                                {% render_field ADM_WikiItemForm.secure type="range" class="form-range" min="0" max="5" step=1 %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0 font-weight-bold">操作档案</h3>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.duration.id_for_label }}">
+                                    {{ ADM_WikiItemForm.duration.label }}</label>
+                                {% render_field ADM_WikiItemForm.duration class="form-control" %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.last.id_for_label }}">
+                                    {{ ADM_WikiItemForm.last.label }}</label>
+                                {% render_field ADM_WikiItemForm.last class="form-control" %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.recover.id_for_label }}">
+                                    {{ ADM_WikiItemForm.recover.label }}</label>
+                                {% render_field ADM_WikiItemForm.recover class="form-control" %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.period.id_for_label }}">
+                                    {{ ADM_WikiItemForm.period.label }}</label>
+                                {% render_field ADM_WikiItemForm.period class="form-control" %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.operator.id_for_label }}">
+                                    {{ ADM_WikiItemForm.operator.label }}</label>
+                                {% render_field ADM_WikiItemForm.operator class="form-control" %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.opermethod.id_for_label }}">
+                                    {{ ADM_WikiItemForm.opermethod.label }}</label>
+                                {% render_field ADM_WikiItemForm.opermethod class="form-control" %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.anesthesia.id_for_label }}">
+                                    {{ ADM_WikiItemForm.anesthesia.label }}</label>
+                                {% render_field ADM_WikiItemForm.anesthesia class="form-control" %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.pain.id_for_label }}">
+                                    {{ ADM_WikiItemForm.pain.label }}</label>
+                                {% render_field ADM_WikiItemForm.pain class="form-control" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0 font-weight-bold">项目详细</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.description.id_for_label }}">
+                                    {{ ADM_WikiItemForm.description.label }}</label>
+                                {% render_field ADM_WikiItemForm.description class="form-control" %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.pros.id_for_label }}">
+                                    {{ ADM_WikiItemForm.pros.label }}</label>
+                                {% render_field ADM_WikiItemForm.pros class="form-control" %}
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.cons.id_for_label }}">
+                                    {{ ADM_WikiItemForm.cons.label }}</label>
+                                {% render_field ADM_WikiItemForm.cons class="form-control" %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.method.id_for_label }}">
+                                    {{ ADM_WikiItemForm.method.label }}</label>
+                                {% render_field ADM_WikiItemForm.method class="form-control" %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.effect.id_for_label }}">
+                                    {{ ADM_WikiItemForm.effect.label }}</label>
+                                {% render_field ADM_WikiItemForm.effect class="form-control" %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.precautions.id_for_label }}">
+                                    {{ ADM_WikiItemForm.precautions.label }}</label>
+                                {% render_field ADM_WikiItemForm.precautions class="form-control" %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3">
+                                <label class="form-label" for="{{ ADM_WikiItemForm.patient.id_for_label }}">
+                                    {{ ADM_WikiItemForm.patient.label }}</label>
+                                {% render_field ADM_WikiItemForm.patient class="form-control" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col mb-3">
+                                <button type="submit" class="btn btn-primary w-100">保存修改</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

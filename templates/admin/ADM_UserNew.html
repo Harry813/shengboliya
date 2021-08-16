@@ -1,0 +1,119 @@
+{% extends 'admin/ADM_Template.html' %}
+{% load widget_tweaks %}
+
+{% block board_title %}创建百科类目{% endblock %}
+
+{% block board_content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0 font-weight-bold">基础信息</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="form-label"
+                                   for="{{ ADM_UserForm.nick.id_for_label }}">{{ ADM_UserForm.nick.label }}</label>
+                            {% render_field ADM_UserForm.nick class="form-control" %}
+                            <div>
+                                {% if ADM_UserForm.nick.help_text %}
+                                    <p class="small">{{ ADM_UserForm.nick.help_text }}</p>
+                                {% elif ADM_UserForm.nick.errors %}
+                                    <p class="small" style="color: red;">{{ ADM_UserForm.nick.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_UserForm.paswd1.id_for_label }}">{{ ADM_UserForm.paswd1.label }}</label>
+                                {% render_field ADM_UserForm.paswd1 class="form-control" %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_UserForm.paswd2.id_for_label }}">{{ ADM_UserForm.paswd2.label }}</label>
+                                {% render_field ADM_UserForm.paswd2 class="form-control" %}
+                            </div>
+                            <div>
+                                {% if ADM_UserForm.paswd1.help_text %}
+                                    <p class="small">{{ ADM_UserForm.paswd1.help_text }}</p>
+                                {% elif ADM_UserForm.paswd1.errors %}
+                                    <p class="small" style="color: red;">{{ ADM_UserForm.paswd1.errors.0 }}</p>
+                                {% elif ADM_UserForm.paswd2.errors %}
+                                    <p class="small" style="color: red;">{{ ADM_UserForm.paswd2.errors.0 }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title mb-0 font-weight-bold">基础信息</h3>
+                    </div>
+                    <div class="card-body">
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_UserForm.last_name.id_for_label }}">{{ ADM_UserForm.last_name.label }}</label>
+                                {% render_field ADM_UserForm.last_name class="form-control" %}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_UserForm.first_name.id_for_label }}">{{ ADM_UserForm.first_name.label }}</label>
+                                {% render_field ADM_UserForm.first_name class="form-control" %}
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_UserForm.email.id_for_label }}">{{ ADM_UserForm.email.label }}</label>
+                                {% if targ_user.email %}
+                                    <div class="input-group">
+                                        {% render_field ADM_UserForm.email class="form-control" %}
+                                        <a href="mailto:{{ targ_user.email }}"
+                                           class="btn btn-secondary">
+                                            <i class="bi bi-envelope-fill"></i>
+                                        </a>
+                                    </div>
+                                {% else %}
+                                    {% render_field ADM_UserForm.email class="form-control" %}
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label"
+                                       for="{{ ADM_UserForm.tele.id_for_label }}">{{ ADM_UserForm.tele.label }}</label>
+                                {% render_field ADM_UserForm.tele class="form-control" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="mb-3 mt-4">
+                                <button type="submit" class="btn btn-primary w-100">保存修改</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}

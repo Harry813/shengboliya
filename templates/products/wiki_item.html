@@ -1,0 +1,310 @@
+{% extends "nav-bar.html" %}
+{% load static %}
+{% load user_tags %}
+
+{% block css %}
+    <style>
+        .deco_icon {
+            font-size: 18px;
+            line-height: 20px;
+            margin: 1em 0 .6em 0;
+            position: relative;
+            font-weight: normal;
+        }
+
+        .decorate h2 {
+            font-size: 30px;
+            line-height: 40px;
+        }
+
+        .decorate h3 {
+            font-size: 24px;
+            line-height: 40px;
+        }
+
+        .decorate h4 {
+            font-size: 18px;
+            line-height: 20px;
+        }
+
+        .decorate h2, .decorate h3, .decorate h4 {
+            margin: 1em 0 .6em 0;
+            padding: 0 0 0 20px;
+            font-weight: normal;
+            text-shadow: 0 -1px 0 rgb(0 0 0 / 40%);
+            position: relative;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .decorate h2:after {
+            background: #0AF;
+        }
+
+        .decorate h3:after {
+            background: #3BF;
+        }
+
+        .decorate h4:after {
+            background: #6Cf;
+        }
+
+        .decorate h2:after, .decorate h3:after, .decorate h4:after{
+            position: absolute;
+            content: "";
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            border-radius: 2px;
+            box-shadow: inset 0 1px 1px rgb(0 0 0 / 50%), 0 1px 1px rgb(255 255 255 / 30%);
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="container-md">
+        <div class="row mt-3 decorate">
+            <div class="col">
+                <h1>{{ item.name }}</h1>
+                {% if item.price %}
+                    <p class="fs-3">{{ item.price }}</p>
+                {% endif %}
+                <p>{{ item.category.father }} | {{ item.category }}</p>
+            </div>
+        </div>
+
+        {% if item.description %}
+            <div class="row mt-3">
+                <div class="col decorate">
+                    <h2>项目简介</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>{{ item.description|linebreaksbr }}</p>
+                </div>
+            </div>
+        {% endif %}
+
+
+        <div class="row mt-3">
+            <div class="col-3 decorate">
+                <h4>关注度</h4>
+            </div>
+            <div class="col deco_icon">
+                {% autoescape off %}
+                    {{ item.attention|heart }}
+                {% endautoescape %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-3 decorate">
+                <h4>安全度</h4>
+            </div>
+            <div class="col deco_icon">
+                {% autoescape off %}
+                    {{ item.secure|shield }}
+                {% endautoescape %}
+            </div>
+        </div>
+
+        {% if item.pros or item.cons%}
+            <div class="row mt-5" >
+                {% if item.pros %}
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col decorate green">
+                                <h3>项目优点</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <p>{{ item.pros|linebreaksbr }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
+                {% if item.cons %}
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col decorate red">
+                                <h3>项目缺点</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <p>{{ item.cons|linebreaksbr }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        {% if item.method %}
+            <div class="row mt-3">
+                <div class="col decorate">
+                    <h2>治疗方法</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>{{ item.method|linebreaksbr }}</p>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if item.patient %}
+            <div class="row mt-3">
+                <div class="col decorate">
+                    <h2>适用人群</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>{{ item.patient|linebreaksbr }}</p>
+                </div>
+            </div>
+        {% endif %}
+
+        {% if item.precautions %}
+            <div class="row mt-3">
+                <div class="col decorate">
+                    <h2>注意事项</h2>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p>{{ item.precautions|linebreaksbr }}</p>
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row mt-5">
+            {% if item.duration %}
+                <div class="col-md-4 col-6">
+                    <div class="row">
+                        <div class="col decorate green">
+                            <h3>治疗时长</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>{{ item.duration|linebreaksbr }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if item.period %}
+                <div class="col-md-4 col-6">
+                    <div class="row">
+                        <div class="col decorate green">
+                            <h3>治疗周期</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>{{ item.period|linebreaksbr }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if item.last %}
+                <div class="col-md-4 col-6">
+                    <div class="row">
+                        <div class="col decorate green">
+                            <h3>效果持续</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>{{ item.last|linebreaksbr }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if item.recover %}
+                <div class="col-md-4 col-6">
+                    <div class="row">
+                        <div class="col decorate green">
+                            <h3>恢复时间</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>{{ item.recover|linebreaksbr }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if item.anesthesia %}
+                <div class="col-md-4 col-6">
+                    <div class="row">
+                        <div class="col decorate green">
+                            <h3>麻醉方式</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>{{ item.anesthesia|linebreaksbr }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if item.operator %}
+                <div class="col-md-4 col-6">
+                    <div class="row">
+                        <div class="col decorate green">
+                            <h3>操作人员资质</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>{{ item.operator|linebreaksbr }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if item.opermethod %}
+                <div class="col-md-4 col-6">
+                    <div class="row">
+                        <div class="col decorate green">
+                            <h3>操作方式</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>{{ item.opermethod|linebreaksbr }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+
+            {% if item.pain %}
+                <div class="col-md-4 col-6">
+                    <div class="row">
+                        <div class="col decorate green">
+                            <h3>疼痛感</h3>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <p>{{ item.pain|linebreaksbr }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div style="height: 100px; color: white"></div>
+
+{% endblock %}
