@@ -313,7 +313,7 @@ def wiki_item_view (request, item_code):
 
 
 def operator_view (request):
-    param = {"page_title": "医院", "info": get_panel_info(), "active_page": "operators",
+    param = {"page_title": '圣博丽雅-首页', "info": get_panel_info(), "active_page": "operators",
              "bottom_nav": request.user_agent.is_mobile, "pin_list": Operator.objects.filter(pin=True)
              }
     if request.user.is_authenticated:
