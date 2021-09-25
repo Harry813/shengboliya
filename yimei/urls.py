@@ -41,6 +41,7 @@ urlpatterns = [
     path('operators/filter=<str:cond>/', views.operator_filter_view, name="operatorsF"),
     path('operators/<int:opid>', views.operator_detail_view, name="operatorsD"),
     path('partner_rule/', views.partner_rule, name="partnerRule"),
+    path('blacklist/', views.blacklist_view, name="balcklist"),
     path('admin/login/', views.admin_login, name="ADM_Login"),
     path('admin/index/', views.admin_index, name="ADM_Index"),
     path('admin/', views.admin_index, name="ADM_Index_1"),

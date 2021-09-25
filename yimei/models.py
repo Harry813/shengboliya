@@ -286,3 +286,55 @@ class Withdrawal (models.Model):
     applicator = models.ForeignKey(verbose_name="申请人", on_delete=models.CASCADE, to="User_Profile")
 
     UniqueConstraint(fields=["create_date", "applicator"], name="每日提现约束")
+
+
+class Blacklist(models.Model):
+    name = models.CharField(
+        verbose_name="医院\\项目\\医生名称",
+        max_length=50
+    )
+
+    address = models.CharField(
+        verbose_name="地址",
+        max_length=150
+    )
+
+    tag = models.CharField(
+        verbose_name="标签",
+        max_length=150,
+        help_text="请用逗号分隔标签"
+    )
+
+    def get_tag_as_string(self):
+        return self.tag.replace(",", "  ").replace("，", "  ")
+
+
+class Report(models.Model):
+    name = models.CharField(
+        verbose_name="医美项目或医院，医生名称",
+        max_length=150
+    )
+
+    query = models.TextField(
+        verbose_name="查询问题",
+        help_text="如：是否有客诉或者项目价格是否合规等问题"
+    )
+
+    wechat = models.CharField(
+        verbose_name="微信号",
+        max_length=150,
+        help_text="清留下您的微信，客服人员将尽快联系您"
+    )
+
+    status = models.BooleanField(
+        verbose_name="状态",
+        default=True
+    )
+
+    @property
+    def is_open(self):
+        return self.status is True
+
+    @property
+    def is_close(self):
+        return self.status is False

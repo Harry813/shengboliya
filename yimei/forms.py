@@ -260,6 +260,22 @@ class WithdrawalFrom(forms.Form):
             return cleaned_data
 
 
+class reportForm(forms.ModelForm):
+    class Meta:
+        models = Report
+        exclude = ["status"]
+
+
+class ADM_reportForm(forms.ModelForm):
+    class Meta:
+        models = Report
+
+
+class ADM_BlacklistForm(forms.Form):
+    class Meta:
+        models = Blacklist
+
+
 class ADM_UserForm(forms.Form):
     inv_type_list = (
         ("UNM", "用户名"),

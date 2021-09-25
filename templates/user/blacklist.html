@@ -1,0 +1,78 @@
+{% load widget_tweaks %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title }}</title>
+    {% block frame %}
+        <link rel="stylesheet" href="{% static 'bs5/css/bootstrap.css' %}">
+    {% endblock %}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+    {% block css %}{% endblock %}
+</head>
+<body>
+
+<form method="post">
+    <div class="row">
+        <div class="col-12 mb-3">
+            <label class="form-label" for="{{ report_form.name.id_for_label }}">
+                {{ report_form.name.label }}
+                {% if report_form.name.field.required %}
+                    <span style="color: red">*</span>
+                {% endif %}
+            </label>
+            {% render_field report_form.name class="form-control" %}
+            <div>
+                {% if report_form.name.help_text %}
+                    <p class="small">{{ report_form.name.help_text }}</p>
+                {% elif report_form.name.errors %}
+                    <p class="small" style="color: red;">{{ report_form.name.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <label class="form-label" for="{{ report_form.query.id_for_label }}">
+                {{ report_form.query.label }}
+                {% if report_form.query.field.required %}
+                    <span style="color: red">*</span>
+                {% endif %}
+            </label>
+            {% render_field report_form.query class="form-control" %}
+            <div>
+                {% if report_form.query.help_text %}
+                    <p class="small">{{ report_form.query.help_text }}</p>
+                {% elif report_form.query.errors %}
+                    <p class="small" style="color: red;">{{ report_form.query.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <label class="form-label" for="{{ report_form.wechat.id_for_label }}">
+                {{ report_form.wechat.label }}
+                {% if report_form.wechat.field.required %}
+                    <span style="color: red">*</span>
+                {% endif %}
+            </label>
+            {% render_field report_form.wechat class="form-control" %}
+            <div>
+                {% if report_form.wechat.help_text %}
+                    <p class="small">{{ report_form.wechat.help_text }}</p>
+                {% elif report_form.wechat.errors %}
+                    <p class="small" style="color: red;">{{ report_form.wechat.errors.0 }}</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-12 mb-3">
+            <button type="submit" class="btn">查询</button>
+        </div>
+    </div>
+</form>
+
+</body>
+</html>

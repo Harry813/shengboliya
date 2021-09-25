@@ -8,12 +8,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page_title }}</title>
     {% block frame %}
-        <link rel="stylesheet" href="{% static 'bs5/css/bootstrap.css' %}">{% endblock %}
+        <link rel="stylesheet" href="{% static 'bs5/css/bootstrap.css' %}">
+    {% endblock %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
     {% block css %}{% endblock %}
     <style>
-
-
         .hewarp li {
             float: left;
             padding: 0 5px;
@@ -233,5 +232,3 @@
 {% block script %}{% endblock %}
 </body>
 </html>
-
-{# TODO: 增加百科页面入口 #}

@@ -19,7 +19,7 @@ from .panel_setting import *
 ###########################################################
 
 
-def home (request):
+def home(request):
     # param = {
     #     "page_title": "首页",
     #     "s": "Hello, there",
@@ -40,7 +40,7 @@ def home (request):
     return redirect('operators')
 
 
-def login_view (request):
+def login_view(request):
     param = {
         "page_title": "登录",
         "info": get_panel_info(),
@@ -71,14 +71,14 @@ def login_view (request):
     return render(request, 'user/login.html', param)
 
 
-def logout_view (request):
+def logout_view(request):
     logout(request)
     toasts = [get_toast(message="注销成功！", ty=2, color="primary")]
     request.session["toast_list"] = toasts
     return redirect('home')
 
 
-def register_view (request, invi_code=None):
+def register_view(request, invi_code=None):
     param = {
         "page_title": "注册",
         "info": get_panel_info(),
@@ -127,7 +127,7 @@ def register_view (request, invi_code=None):
     return render(request, 'user/register.html', param)
 
 
-def profile_view (request):
+def profile_view(request):
     param = {
         "page_title": "用户中心",
         "info": get_panel_info(),
@@ -150,7 +150,7 @@ def profile_view (request):
 
 
 @login_required
-def user_setting (request):
+def user_setting(request):
     param = {
         "page_title": "设置中心",
         "info": get_panel_info(),
@@ -162,7 +162,7 @@ def user_setting (request):
 
 
 @login_required
-def user_id_verify (request):
+def user_id_verify(request):
     param = {
         "page_title": "设置中心 - 实名认证",
         "info": get_panel_info(),
@@ -188,7 +188,7 @@ def user_id_verify (request):
     return render(request, "user/user_id_verify.html", param)
 
 
-def promote_view (request):
+def promote_view(request):
     param = {
         "page_title": "推广中心",
         "info": get_panel_info(),
@@ -199,7 +199,7 @@ def promote_view (request):
 
 
 @login_required
-def appoint_view (request, opid=None):
+def appoint_view(request, opid=None):
     param = {
         "page_title": "预约中心",
         "info": get_panel_info(),
@@ -229,7 +229,7 @@ def appoint_view (request, opid=None):
 
 
 @login_required
-def transaction_view (request):
+def transaction_view(request):
     param = {
         "page_title": "提现中心",
         "info": get_panel_info(),
@@ -243,7 +243,7 @@ def transaction_view (request):
 
 
 @login_required
-def withdrawal_view (request):
+def withdrawal_view(request):
     param = {
         "page_title": "提现中心",
         "info": get_panel_info(),
@@ -277,7 +277,7 @@ def withdrawal_view (request):
     return render(request, "user/withdrawal.html", param)
 
 
-def wiki_index_view (request):
+def wiki_index_view(request):
     result = []
     for c in Wiki_Category.objects.filter(father=None):
         c_dict = {"code": c.code, "name": c.name, "children": []}
@@ -297,7 +297,7 @@ def wiki_index_view (request):
     return render(request, "products/wiki.html", param)
 
 
-def wiki_item_view (request, item_code):
+def wiki_item_view(request, item_code):
     param = {
         "info": get_panel_info(),
         "active_page": "wiki",
@@ -312,7 +312,7 @@ def wiki_item_view (request, item_code):
         raise Http404("对不起，未找到该百科条目")
 
 
-def operator_view (request):
+def operator_view(request):
     param = {"page_title": '圣博丽雅平台', "info": get_panel_info(), "active_page": "operators",
              "bottom_nav": request.user_agent.is_mobile, "pin_list": Operator.objects.filter(pin=True)
              }
@@ -324,7 +324,7 @@ def operator_view (request):
     return render(request, "products/operators.html", param)
 
 
-def operator_filter_view (request, cond):
+def operator_filter_view(request, cond):
     param = {"page_title": "产品中心", "info": get_panel_info(), "active_page": "operators",
              "bottom_nav": request.user_agent.is_mobile
              }
@@ -353,12 +353,39 @@ def operator_filter_view (request, cond):
 
 
 @login_required
-def operator_detail_view (request, opid):
+def operator_detail_view(request, opid):
     param = {"page_title": "产品中心", "info": get_panel_info(), "active_page": "operators",
              "inv_code": User_Profile.objects.get(id=request.user.id).invi_code,
              "bottom_nav": request.user_agent.is_mobile, "op": get_object_or_404(Operator, id=opid)
              }
     return render(request, "products/operator_detail.html", param)
+
+
+def blacklist_view(request):
+    param = {
+        "page_title": "黑名单医院查询",
+        "info": get_panel_info(),
+        "active_page": "blacklist",
+        "inv_code": User_Profile.objects.get(id=request.user.id).invi_code,
+        "bottom_nav": request.user_agent.is_mobile,
+    }
+
+    blacklist = Blacklist.objects.all()[:5]
+    param["blacklist"] = blacklist
+
+    if request.method == "POST":
+        form = reportForm(request.POST)
+        param["report_form"] = form
+
+        if form.is_valid():
+            form.save()
+            return render(request, "user/blacklist.html", param)
+        else:
+            return render(request, "user/blacklist.html", param)
+
+    else:
+        form = reportForm()
+        param["report_form"] = form
 
 
 ###########################################################
