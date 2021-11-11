@@ -472,6 +472,7 @@ def tools_view(request):
         "info": get_panel_info(),
         "active_page": "tools",
         "bottom_nav": request.user_agent.is_mobile,
+        "uid": request.user.id
     }
     return render(request, "tool/tools.html", param)
 
