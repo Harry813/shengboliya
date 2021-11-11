@@ -261,19 +261,35 @@ class WithdrawalFrom(forms.Form):
 
 
 class reportForm(forms.ModelForm):
+    private_check = forms.BooleanField(
+        required=True,
+        widget=forms.CheckboxInput()
+    )
+
     class Meta:
-        models = Report
+        model = BlacklistReport
         exclude = ["status"]
+
+    def __init__(self, *args, **kwargs):
+        super(reportForm, self).__init__(*args, **kwargs)
+        self.fields["visitor"].widget = forms.HiddenInput()
+        self.fields["creator"].widget = forms.HiddenInput()
+
+
+class IndexOPSearchForm(forms.Form):
+    query = forms.CharField()
 
 
 class ADM_reportForm(forms.ModelForm):
     class Meta:
-        models = Report
+        model = BlacklistReport
+        fields = "__all__"
 
 
 class ADM_BlacklistForm(forms.Form):
     class Meta:
-        models = Blacklist
+        model = Blacklist
+        fields = "__all__"
 
 
 class ADM_UserForm(forms.Form):

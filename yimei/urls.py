@@ -15,11 +15,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path
+from django.views.generic import TemplateView
+
 from yimei import views
 from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
+    path('wxlogin/', views.wechat_login, name="wechatLogin"),
+    path('wxcode/', views.wechat_code, name="wechatCode"),
     # path('superadmin/', admin.site.urls),
     path('', views.home, name="home"),
     path('promote/', views.promote_view, name="promote"),
@@ -39,9 +43,17 @@ urlpatterns = [
     path('withdrawal/', views.withdrawal_view, name="withdrawal"),
     path('operators/', views.operator_view, name="operators"),
     path('operators/filter=<str:cond>/', views.operator_filter_view, name="operatorsF"),
-    path('operators/<int:opid>', views.operator_detail_view, name="operatorsD"),
+    path('operators/<int:opid>/', views.operator_detail_view, name="operatorsD"),
+    path('operators/search/', views.operator_search_view, name="operatorsD"),
     path('partner_rule/', views.partner_rule, name="partnerRule"),
-    path('blacklist/', views.blacklist_view, name="balcklist"),
+    path('private_rule/', views.private_rule, name="privateRule"),
+    path('blacklist/<int:uid>/', views.blacklist_view, name="blacklist_with"),
+    path('blacklist/', views.blacklist_view, name="blacklist"),
+    path('tools/', views.tools_view, name="tools"),
+    path('tool/blacklist/<int:page>/', views.tool_blacklist_view, name="tool_blacklist"),
+    path('tool/report/<int:page>/', views.tool_report_view, name="tool_report"),
+    path('tool/report/detail/<int:rep_id>/', views.tool_report_detail_view, name="tool_report_detail"),
+    path('tool/report/status/<int:rep_id>/', views.tool_report_status, name="tool_report_status"),
     path('admin/login/', views.admin_login, name="ADM_Login"),
     path('admin/index/', views.admin_index, name="ADM_Index"),
     path('admin/', views.admin_index, name="ADM_Index_1"),
@@ -65,7 +77,18 @@ urlpatterns = [
     path('admin/operators/op=<int:opid>', views.admin_operatorsEdit, name="ADM_OPEdit"),
     path('admin/operators/dele=<int:opid>', views.admin_operatorsDele, name="ADM_OPDele"),
     path('admin/withdrawals/page<int:page>/', views.admin_withdrawal, name="ADM_Withdrawals"),
-    path('admin/withdrawal/wid=<int:wid>/', views.admin_withdrawalView, name="ADM_WithdrawalView")
+    path('admin/withdrawal/wid=<int:wid>/', views.admin_withdrawalView, name="ADM_WithdrawalView"),
+    path('admin/wechat/page<int:page>/', views.admin_wechat_view, name="ADM_Wechat"),
+    path('admin/report/page<int:page>/', views.admin_report_view, name="ADM_Report"),
+    path('admin/report/detail/<int:rep_id>/', views.admin_report_detail_view, name="ADM_Report_Detail"),
+    path('admin/report/status/<int:rep_id>/', views.admin_report_status, name="ADM_Report_Status"),
+    path(
+        'MP_verify_xIDGduZfV6vPdCf8.txt/',
+        TemplateView.as_view(
+            template_name="MP_verify_xIDGduZfV6vPdCf8.txt",
+            content_type="text/plain"
+        ),
+        name="wx_verify"),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 handler403 = views.perm_denied_view

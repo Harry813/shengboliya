@@ -1,0 +1,126 @@
+{% extends 'tool/tool_template.html' %}
+
+{% block css %}
+    <style>
+        .stat{
+            align-items: center;
+            background: #d3e2f7;
+            border-radius: 50%;
+            display: flex;
+            height: 40px;
+            justify-content: center;
+            width: 40px;
+        }
+    </style>
+{% endblock %}
+
+{% block main-content %}
+    <div class="row">
+        <div class="col-md-4 col-lg-3 col-sm-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col mt-0">
+                            <h5 class="card-title">总浏览次数</h5>
+                        </div>
+
+                        <div class="col-auto">
+                            <div class="stat text-primary">
+                                <i class="bi bi-chat-dots"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="mt-1 mb-3">{{ visit_total }}</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="mb-3 mt-4">
+                        <p class="card-text">您的专属黑白名单：</p>
+                        <p class="card-text">https://www.shengboliya.com/blacklist/{{ request.user.id }}/</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-responsive table-hover" style="width:100%">
+                            <thead>
+                            <tr>
+                                <th scope="col" style="width:10%; min-width: 40px">头像</th>
+                                <th scope="col" style="width:45%">昵称</th>
+                                <th scope="col" style="width:45%">访问日期</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for v in visits %}
+                                <tr>
+                                    <th scope="row">
+                                        <img src="{{ v.visitor.avatar_url }}" width="32" height="32" class="rounded-circle my-n1" alt="Avatar">
+                                    </th>
+                                    <td>{{ v.visitor.nickname }}</td>
+                                    <td>{{ v.visit_time }}</td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" class="text-center"><strong>暂无记录</strong></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                {% if page_count > 1 %}
+                    <div class="card-footer">
+                        第{{ visits.number }}页，共{{ page_count }}页
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-end">
+                                {# 上一页 #}
+                                <li class="page-item {% if not visits.has_previous %} disabled {% endif %}">
+                                    {% if visits.has_previous %}
+                                        <a class="page-link" href="{% url 'tool_blacklist' visits.previous_page_number %}"
+                                           aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    {% else %}
+                                        <a class="page-link" href="#"
+                                           aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    {% endif %}
+                                </li>
+                                {% for pnum in page_list %}
+                                    <li class="page-item {% if current_page == pnum %}active{% elif pnum == "…" %}disable{% endif %}">
+                                        <a class="page-link"
+                                           href="{% url 'tool_blacklist' pnum %}">{{ pnum }}</a></li>
+                                {% endfor %}
+                                {# 下一页 #}
+                                <li class="page-item {% if not visits.has_next %} disabled {% endif %}">
+                                    {% if visits.has_next %}
+                                        <a class="page-link" href="{% url 'tool_blacklist' visits.next_page_number %}"
+                                           aria-label="Previous">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    {% else %}
+                                        <a class="page-link" href="#"
+                                           aria-label="Previous">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    {% endif %}
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

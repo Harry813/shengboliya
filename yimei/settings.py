@@ -61,8 +61,7 @@ ROOT_URLCONF = 'yimei.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -150,4 +149,10 @@ LOGIN_URL = "/login/"
 LOGIN_REDIRECT_URL = "/profile/"
 LOGOUT_REDIRECT_URL = "/index/"
 
-CSRF_TRUSTED_ORIGINS = ["draw.hanxiaofei.tk"]
+CSRF_TRUSTED_ORIGINS = ["www.shengboliya.com"]
+
+# Wechat Setting
+APPID = "wx9300dea2a4c9ca5e"
+SCOPE = "snsapi_userinfo"
+STATE = "LOGIN"
+SECRET = "e3f3485e14a1173363821be4e52ddb43"

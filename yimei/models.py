@@ -309,7 +309,7 @@ class Blacklist(models.Model):
         return self.tag.replace(",", "  ").replace("，", "  ")
 
 
-class Report(models.Model):
+class BlacklistReport(models.Model):
     name = models.CharField(
         verbose_name="医美项目或医院，医生名称",
         max_length=150
@@ -320,15 +320,45 @@ class Report(models.Model):
         help_text="如：是否有客诉或者项目价格是否合规等问题"
     )
 
+    tele = models.CharField(
+        max_length=11,
+        verbose_name="手机",
+        validators=[TeleValidator],
+        help_text="请留下您的手机号，客服人员将尽快联系您",
+    )
+
     wechat = models.CharField(
         verbose_name="微信号",
         max_length=150,
-        help_text="清留下您的微信，客服人员将尽快联系您"
+        blank=True
     )
 
     status = models.BooleanField(
         verbose_name="状态",
         default=True
+    )
+
+    visitor = models.CharField(
+        verbose_name="访问者微信OPEN_ID",
+        max_length=128,
+        blank=True,
+        null=True
+    )
+
+    creator = models.IntegerField(
+        verbose_name="创建者ID",
+        blank=True,
+        null=True
+    )
+
+    create_date = models.DateTimeField(
+        verbose_name="创建时间",
+        auto_now_add=True,
+    )
+
+    last_update = models.DateTimeField(
+        verbose_name="最后更新",
+        auto_now=True,
     )
 
     @property
@@ -338,3 +368,118 @@ class Report(models.Model):
     @property
     def is_close(self):
         return self.status is False
+
+    @property
+    def avatar_url(self):
+        if self.visitor is not None:
+            return WechatVisitor.objects.get(openid=self.visitor).avatar_url
+        else:
+            return None
+
+    @property
+    def nickname(self):
+        if self.visitor is not None:
+            return WechatVisitor.objects.get(openid=self.visitor).nickname
+        else:
+            return None
+
+    @property
+    def get_creator(self):
+        if self.creator is not None:
+            return User_Profile.objects.get(id=self.creator).get_full_name()
+        else:
+            return None
+
+    @property
+    def query_short(self):
+        if len(self.query) > 30:
+            return self.query[:30] + "……"
+        else:
+            return self.query
+
+
+class WechatVisitor(models.Model):
+    openid = models.CharField(
+        max_length=128,
+        primary_key=True
+    )
+
+    avatar_url = models.CharField(
+        max_length=500,
+        verbose_name="头像"
+    )
+
+    nickname = models.CharField(
+        max_length=50,
+        verbose_name="用户昵称"
+    )
+
+    sex = models.IntegerField(
+        choices=(
+            (0, "未知"),
+            (1, "男性"),
+            (2, "女性"),
+        ),
+        verbose_name="性别"
+    )
+    
+    city = models.CharField(
+        max_length=50,
+        verbose_name="所在城市"
+    )
+
+    province = models.CharField(
+        max_length=50,
+        verbose_name="所在省份"
+    )
+
+    country = models.CharField(
+        max_length=15,
+        verbose_name="所在国家"
+    )
+
+    def get_address(self):
+        s = ""
+        if self.country != "":
+            s += self.country
+        else:
+            s += "??"
+
+        if self.province != "":
+            s += f"-{self.province}"
+        else:
+            s += "??"
+
+        if self.city != "":
+            s += f"-{self.city}"
+        else:
+            s += "??"
+
+        if s == "??????":
+            s = "??"
+        return s
+    
+
+class blacklist_visit(models.Model):
+    visitor = models.ForeignKey(
+        to=WechatVisitor,
+        on_delete=models.CASCADE
+    )
+
+    blacklist_creator = models.ForeignKey(
+        to=User_Profile,
+        on_delete=models.CASCADE
+    )
+
+    visit_time = models.DateTimeField(
+        auto_now=True,
+        verbose_name="上次浏览"
+    )
+
+    visit_total = models.IntegerField(
+        default=1,
+        verbose_name="浏览次数"
+    )
+
+    class Meta:
+        unique_together = ("visitor", "blacklist_creator")

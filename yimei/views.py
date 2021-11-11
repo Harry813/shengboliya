@@ -2,16 +2,21 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.db.models import Q
 from django.http import HttpResponseRedirect, HttpResponseForbidden
 from django.shortcuts import Http404, HttpResponse, redirect, render, get_object_or_404
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.core.exceptions import PermissionDenied
 
+from urllib.parse import quote
+
 from .forms import *
 from .api import *
 from .models import *
 from .panel_setting import *
+from .settings import APPID, SCOPE, STATE, SECRET
+from .utils import get_wx_access_token, get_user_info, convert_string_encoding, wx_visit
 
 
 ###########################################################
@@ -61,7 +66,6 @@ def login_view(request):
                 return HttpResponseRedirect(next_page)
             else:
                 return redirect('profile')
-
         else:
             param["validate"] = True
             return render(request, 'user/login.html', param)
@@ -313,15 +317,40 @@ def wiki_item_view(request, item_code):
 
 
 def operator_view(request):
-    param = {"page_title": '圣博丽雅平台', "info": get_panel_info(), "active_page": "operators",
-             "bottom_nav": request.user_agent.is_mobile, "pin_list": Operator.objects.filter(pin=True)
-             }
+    param = {
+        "page_title": '圣博丽雅平台',
+        "info": get_panel_info(),
+        "active_page": "operators",
+        "bottom_nav": request.user_agent.is_mobile,
+        "pin_list": Operator.objects.filter(pin=True)
+    }
     if request.user.is_authenticated:
         usr = User_Profile.objects.get(id=request.user.id)
         param["usr_lv"] = usr.vip_lv
     else:
         param["usr_lv"] = -1
+
     return render(request, "products/operators.html", param)
+
+
+def operator_search_view(request):
+    param = {
+        "page_title": '圣博丽雅平台-搜索结构',
+        "info": get_panel_info(),
+        "active_page": "operators",
+        "bottom_nav": request.user_agent.is_mobile,
+        "pin_list": Operator.objects.filter(pin=True)
+    }
+
+    if request.user.is_authenticated:
+        usr = User_Profile.objects.get(id=request.user.id)
+        param["usr_lv"] = usr.vip_lv
+    else:
+        param["usr_lv"] = -1
+
+    query = request.GET.get("query")
+    param["op_list"] = Operator.objects.filter(Q(name__contains=query) | Q(address__contains=query))
+    return render(request, "products/operators_search.html", param)
 
 
 def operator_filter_view(request, cond):
@@ -361,20 +390,67 @@ def operator_detail_view(request, opid):
     return render(request, "products/operator_detail.html", param)
 
 
-def blacklist_view(request):
+def wechat_login(request):
+    REDIRECT_URI = quote('https://www.shengboliya.com/wxcode/', safe='')
+    url = f"https://open.weixin.qq.com/connect/oauth2/authorize?appid={APPID}&redirect_uri={REDIRECT_URI}" \
+          f"&response_type=code&scope={SCOPE}&state={STATE}#wechat_redirect"
+    return HttpResponseRedirect(url)
+
+
+def wechat_code(request):
+    CODE = request.GET.get("code")
+    j = get_wx_access_token(appid=APPID, secret=SECRET, code=CODE)
+    if "errcode" in j:
+        return HttpResponse(f"<h1>错误-{j['errcode']}</h1><p>{j['errmsg']}</p>")
+
+    wx_json = get_user_info(access_token=j["access_token"], open_id=j["openid"])
+    if "errcode" in wx_json:
+        return HttpResponse(f"<h1>错误-{wx_json['errcode']}</h1><p>{wx_json['errmsg']}</p>")
+
+    wx_user = WechatVisitor(
+        openid=wx_json["openid"],
+        avatar_url=wx_json["headimgurl"],
+        nickname=convert_string_encoding(wx_json["nickname"]),
+        sex=int(wx_json["sex"]),
+        city=wx_json["city"],
+        country=wx_json["country"],
+        province=wx_json["province"],
+    )
+    wx_user.save()
+    request.session["wx_openid"] = wx_json["openid"]
+    if "next" in request.session:
+        url = request.session["next"]
+        del request.session["next"]
+        return HttpResponseRedirect(url)
+    return render(request, "wx.html", {"result": wx_user.nickname})
+
+
+def blacklist_view(request, uid=None):
     param = {
         "page_title": "黑名单医院查询",
         "info": get_panel_info(),
         "active_page": "blacklist",
-        "inv_code": User_Profile.objects.get(id=request.user.id).invi_code,
         "bottom_nav": request.user_agent.is_mobile,
     }
 
-    blacklist = Blacklist.objects.all()[:5]
+    try:
+        creator = User_Profile.objects.get(id=uid)
+        if "wx_openid" not in request.session:
+            request.session["next"] = reverse("blacklist_with", kwargs={"uid": uid})
+            return redirect("wechatLogin")
+    except ObjectDoesNotExist:
+        creator = None
+        if "wx_openid" not in request.session:
+            request.session["next"] = reverse("blacklist")
+            return redirect("wechatLogin")
+
+    wx_visit(open_id=request.session["wx_openid"], target=creator)
+
+    blacklist = Blacklist.objects.all()
     param["blacklist"] = blacklist
 
     if request.method == "POST":
-        form = reportForm(request.POST)
+        form = reportForm(request.POST, initial={"creator": uid, "visitor": request.session["wx_openid"]})
         param["report_form"] = form
 
         if form.is_valid():
@@ -384,9 +460,91 @@ def blacklist_view(request):
             return render(request, "user/blacklist.html", param)
 
     else:
-        form = reportForm()
+        form = reportForm(initial={"creator": uid, "visitor": request.session["wx_openid"]})
         param["report_form"] = form
+        return render(request, "user/blacklist.html", param)
 
+
+@login_required
+def tools_view(request):
+    param = {
+        "page_title": "圣博丽雅-工具",
+        "info": get_panel_info(),
+        "active_page": "tools",
+        "bottom_nav": request.user_agent.is_mobile,
+    }
+    return render(request, "tool/tools.html", param)
+
+
+@login_required
+def tool_blacklist_view(request, page=1):
+    param = {
+        "page_title": "圣博丽雅-工具",
+        "info": get_panel_info(),
+        "active_page": "tool_blacklist",
+        "bottom_nav": request.user_agent.is_mobile,
+        "uid": request.user.id,
+    }
+
+    visits = blacklist_visit.objects.filter(blacklist_creator=request.user.id)
+    total = 0
+    for r in visits:
+        total += r.visit_total
+    param["visit_total"] = total
+
+    p = Paginator(visits, 25)
+    param["page_count"] = p.num_pages
+    param["page_list"] = p.get_elided_page_range(p.num_pages, on_each_side=2)
+    visits = p.page(page)
+    param["current_page"] = page
+    param["visits"] = visits
+    return render(request, "tool/tool_blacklist.html", param)
+
+
+@login_required
+def tool_report_view(request, page=1):
+    param = {
+        "page_title": "圣博丽雅-工具",
+        "info": get_panel_info(),
+        "active_page": "tool_report",
+        "bottom_nav": request.user_agent.is_mobile,
+        "uid": request.user.id,
+    }
+    reports = BlacklistReport.objects.filter(creator=request.user.id).order_by("-status", "create_date")
+    p = Paginator(reports, 10)
+    param["page_count"] = p.num_pages
+    param["page_list"] = p.get_elided_page_range(p.num_pages, on_each_side=2)
+    reports = p.page(page)
+    param["current_page"] = page
+    request.session["current_page"] = page
+    param["reports"] = reports
+    return render(request, "tool/tool_report.html", param)
+
+
+@login_required
+def tool_report_detail_view(request, rep_id):
+    param = {
+        "page_title": "圣博丽雅-工具",
+        "info": get_panel_info(),
+        "active_page": "tool_report",
+        "bottom_nav": request.user_agent.is_mobile,
+        "uid": request.user.id,
+        "rep_id": rep_id,
+        "page_num": request.session.get("current_page")
+    }
+
+    rep = get_object_or_404(BlacklistReport, id=rep_id)
+    param["report"] = rep
+
+    return render(request, "tool/tool_report_detail.html", param)
+
+
+@login_required
+def tool_report_status(request, rep_id):
+    rep = BlacklistReport.objects.get(id=rep_id)
+    rep.status = not rep.status
+    rep.save()
+    return redirect("tool_report_detail", rep_id)
 
 ###########################################################
 # 静态页面
@@ -401,6 +559,16 @@ def partner_rule (request):
         "bottom_nav": request.user_agent.is_mobile,
     }
     return render(request, "staticPages/partner_rule.html", param)
+
+
+def private_rule (request):
+    param = {
+        "page_title": "圣博丽雅-个人信息保护声明",
+        "info": get_panel_info(),
+        "active_page": "privateRule",
+        "bottom_nav": request.user_agent.is_mobile,
+    }
+    return render(request, "staticPages/private_rule.html", param)
 
 
 ###########################################################
@@ -1005,6 +1173,42 @@ def admin_withdrawalView (request, wid):
 
 
 @login_required
+def admin_wechat_view(request, page=1):
+    param = {
+        "page_title": "OP管理",
+        "info": get_panel_info(),
+        "active_page": "ADM_Wechat",
+        "user": request.user,
+        "next": request.get_full_path(),
+    }
+    if "adm_notifications" in request.session:
+        param['adm_notifications'] = request.session["adm_notifications"]
+    else:
+        request.session["adm_notifications"] = []
+        param["adm_notifications"] = request.session["adm_notifications"]
+
+    if request.user.is_staff or request.user.is_superuser:
+        user_list = WechatVisitor.objects.all()
+        p = Paginator(user_list, item_per_page, orphans=2)
+        param["page_count"] = p.num_pages
+        param["page_list"] = p.get_elided_page_range(p.num_pages, on_each_side=2)
+
+        try:
+            user_list = p.page(page)
+        except PageNotAnInteger:
+            user_list = p.page(1)
+        except EmptyPage:
+            user_list = p.page(p.num_pages)
+
+        param["current_page"] = page
+
+        param["user_list"] = user_list
+        return render(request, 'admin/ADM_Wechat.html', param)
+    else:
+        raise PermissionDenied("对不起，您无权访问该页面，请联系管理员！")
+
+
+@login_required
 def admin_operators (request):
     param = {
         "page_title": "OP管理",
@@ -1138,6 +1342,101 @@ def admin_operatorsDele (request, opid):
         raise PermissionDenied("对不起，您无权访问该页面，请联系管理员！")
 
 
+@login_required
+def admin_report_view(request, page=1):
+    param = {
+        "page_title": "咨询管理",
+        "info": get_panel_info(),
+        "active_page": "ADM_Report",
+        "user": request.user,
+        "next": request.get_full_path(),
+    }
+
+    if "adm_notifications" in request.session:
+        param['adm_notifications'] = request.session["adm_notifications"]
+    else:
+        request.session["adm_notifications"] = []
+        param["adm_notifications"] = request.session["adm_notifications"]
+
+    if request.user.is_staff or request.user.is_superuser:
+        reports = BlacklistReport.objects.all().order_by("-status", "create_date")
+        p = Paginator(reports, 10)
+        param["page_count"] = p.num_pages
+        param["page_list"] = p.get_elided_page_range(p.num_pages, on_each_side=2)
+        reports = p.page(page)
+        param["current_page"] = page
+        request.session["current_page"] = page
+        param["reports"] = reports
+        return render(request, "admin/ADM_Report.html", param)
+    else:
+        raise PermissionDenied("对不起，您无权访问该页面，请联系管理员！")
+
+
+@login_required
+def admin_report_detail_view(request, rep_id):
+    param = {
+        "page_title": "咨询管理",
+        "info": get_panel_info(),
+        "active_page": "ADM_Report",
+        "user": request.user,
+        "next": request.get_full_path(),
+        "rep_id": rep_id,
+        "page_num": request.session.get("current_page")
+    }
+    if "adm_notifications" in request.session:
+        param['adm_notifications'] = request.session["adm_notifications"]
+    else:
+        request.session["adm_notifications"] = []
+        param["adm_notifications"] = request.session["adm_notifications"]
+
+    if request.user.is_staff or request.user.is_superuser:
+        rep = get_object_or_404(BlacklistReport, id=rep_id)
+        param["report"] = rep
+        return render(request, "admin/ADM_Report_Detail.html", param)
+    else:
+        raise PermissionDenied("对不起，您无权访问该页面，请联系管理员！")
+
+
+@login_required
+def admin_report_status(request, rep_id):
+    if request.user.is_staff or request.user.is_superuser:
+        rep = BlacklistReport.objects.get(id=rep_id)
+        rep.status = not rep.status
+        rep.save()
+        return redirect("ADM_Report_Detail", rep_id)
+    else:
+        raise PermissionDenied("对不起，您无权访问该页面，请联系管理员！")
+
+
+@login_required
+def admin_blacklist_view(request, page=1):
+    param = {
+        "page_title": "咨询管理",
+        "info": get_panel_info(),
+        "active_page": "ADM_Blacklist",
+        "user": request.user,
+        "next": request.get_full_path(),
+    }
+    if "adm_notifications" in request.session:
+        param['adm_notifications'] = request.session["adm_notifications"]
+    else:
+        request.session["adm_notifications"] = []
+        param["adm_notifications"] = request.session["adm_notifications"]
+
+    if request.user.is_staff or request.user.is_superuser:
+        blacklists = Blacklist.objects.all()
+        p = Paginator(blacklists, 10)
+        param["page_count"] = p.num_pages
+        param["page_list"] = p.get_elided_page_range(p.num_pages, on_each_side=2)
+        blacklists = p.page(page)
+        param["current_page"] = page
+        request.session["current_page"] = page
+        param["reports"] = blacklists
+        return render(request, "admin/ADM_blacklist.html", param)
+    else:
+        raise PermissionDenied("对不起，您无权访问该页面，请联系管理员！")
+
+
 def admin_noti_remove (request, origin_page, noti_ind=None):
     if noti_ind is None:
         request.session["adm_notifications"] = []
@@ -1162,4 +1461,5 @@ def perm_denied_view (request, exception):
 
 
 def page_not_found_view (request, exception):
-    return render(request, "errors/404.html")
+    param = {"exception": exception}
+    return render(request, "errors/404.html", param)

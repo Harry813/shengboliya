@@ -1,0 +1,66 @@
+{% extends "admin/ADM_base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block frame %}
+    <link href="{% static 'style/ADMKit.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+    <div class="wrapper">
+        <nav id="sidebar" class="sidebar">
+            <div class="sidebar-content js-simplebar">
+                <a class="sidebar-brand" href="#">
+                    <span class="align-middle">{{ info.brand_title }}</span>
+                </a>
+
+                <ul class="sidebar-nav">
+                    <li class="sidebar-item">
+                        <a class="sidebar-link" href="{% url 'profile' %}">
+                            <i class="bi bi-arrow-left"></i> <span class="align-middle">返回用户中心</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-header">
+                        黑白名单
+                    </li>
+
+                    <li class="sidebar-item {% if active_page == 'tool_blacklist' %} active {% endif %}">
+                        <a class="sidebar-link" href="{% url 'tool_blacklist' 1 %}">
+                            <i class="bi bi-person-bounding-box"></i> <span class="align-middle">微信用户</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item {% if active_page == 'tool_report' %} active {% endif %}">
+                        <a class="sidebar-link" href="{% url 'tool_report' 1 %}">
+                            <i class="bi bi-person-lines-fill"></i> <span class="align-middle">黑名单咨询</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+
+        <div class="main">
+            <nav class="navbar navbar-expand navbar-light navbar-bg">
+                <a class="sidebar-toggle d-flex">
+                    <i class="hamburger align-self-center"></i>
+                </a>
+            </nav>
+
+            <main class="content">
+                <div class="container-fluid p-0">
+
+                    <h1 class="h3 mb-3">{{ page_title }}</h1>
+
+                    {% block main-content %}{% endblock %}
+
+                </div>
+            </main>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javaScript %}
+    <script src="{% static 'js/app.js' %}"></script>
+    {% block script %}{% endblock %}
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "nav-bar.html" %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row ">
+        <div class="col-sm-12 col-md-6 col-lg-4">
+            <a class="card text-decoration-none p-3" style="color: black" href="{% url 'tool_blacklist' 1 %}">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="bi bi-bar-chart-line"></i> 黑白名单</h5>
+                    <p class="card-text">查看黑白名单使用记录</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

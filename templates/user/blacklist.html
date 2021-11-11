@@ -11,68 +11,133 @@
         <link rel="stylesheet" href="{% static 'bs5/css/bootstrap.css' %}">
     {% endblock %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{% static 'style/blacklist.css' %}">
     {% block css %}{% endblock %}
 </head>
 <body>
+    <div class="container-fluid pb-4" style="background-color: #fdf1dc;">
+        <img src="{% static 'images/blacklist1.png' %}" alt="黑白名单1" class="w-100">
 
-<form method="post">
-    <div class="row">
-        <div class="col-12 mb-3">
-            <label class="form-label" for="{{ report_form.name.id_for_label }}">
-                {{ report_form.name.label }}
-                {% if report_form.name.field.required %}
-                    <span style="color: red">*</span>
-                {% endif %}
-            </label>
-            {% render_field report_form.name class="form-control" %}
-            <div>
-                {% if report_form.name.help_text %}
-                    <p class="small">{{ report_form.name.help_text }}</p>
-                {% elif report_form.name.errors %}
-                    <p class="small" style="color: red;">{{ report_form.name.errors.0 }}</p>
-                {% endif %}
+        <div class="bg-white p-3 rounded-3">
+            <h3 class="text-center my-2">圣博丽雅帮你查</h3>
+
+            <img src="{% static 'images/blacklist2.jpg' %}" alt="黑白名单2" class="w-100 rounded-3">
+
+            <div class="blacklist my-1 px-2 py-1" style="font-size: small">
+                <p>收录无客诉医美机构<span style="color: red">8000+</span>, 覆盖<span style="color: red">327</span>个城市</p>
+                <p>收录无全麻资质医院<span style="color: red">20000+</span></p>
+                <p>收录医生<span style="color: red">20000+</span></p>
             </div>
-        </div>
 
-        <div class="col-12 mb-3">
-            <label class="form-label" for="{{ report_form.query.id_for_label }}">
-                {{ report_form.query.label }}
-                {% if report_form.query.field.required %}
-                    <span style="color: red">*</span>
-                {% endif %}
-            </label>
-            {% render_field report_form.query class="form-control" %}
-            <div>
-                {% if report_form.query.help_text %}
-                    <p class="small">{{ report_form.query.help_text }}</p>
-                {% elif report_form.query.errors %}
-                    <p class="small" style="color: red;">{{ report_form.query.errors.0 }}</p>
-                {% endif %}
-            </div>
-        </div>
+            <form method="post">
+                {% csrf_token %}
+                {% render_field report_form.visitor class="visually-hidden" %}
+                {% render_field report_form.creator class="visually-hidden" %}
+                <div class="row">
+                    <div class="col-12 mb-3">
+                        <label class="form-label" for="{{ report_form.name.id_for_label }}">
+                            {{ report_form.name.label }}
+                            {% if report_form.name.field.required %}
+                                <span style="color: red">*</span>
+                            {% endif %}
+                        </label>
+                        {% render_field report_form.name class="form-control" %}
+                        <div>
+                            {% if report_form.name.errors %}
+                                <p class="small" style="color: red;">{{ report_form.name.errors.0 }}</p>
+                            {% elif report_form.name.help_text %}
+                                <p class="small">{{ report_form.name.help_text }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
 
-        <div class="col-12 mb-3">
-            <label class="form-label" for="{{ report_form.wechat.id_for_label }}">
-                {{ report_form.wechat.label }}
-                {% if report_form.wechat.field.required %}
-                    <span style="color: red">*</span>
-                {% endif %}
-            </label>
-            {% render_field report_form.wechat class="form-control" %}
-            <div>
-                {% if report_form.wechat.help_text %}
-                    <p class="small">{{ report_form.wechat.help_text }}</p>
-                {% elif report_form.wechat.errors %}
-                    <p class="small" style="color: red;">{{ report_form.wechat.errors.0 }}</p>
-                {% endif %}
-            </div>
-        </div>
+                    <div class="col-12">
+                        <label class="form-label" for="{{ report_form.query.id_for_label }}">
+                            {{ report_form.query.label }}
+                            {% if report_form.query.field.required %}
+                                <span style="color: red">*</span>
+                            {% endif %}
+                        </label>
+                        {% render_field report_form.query class="form-control" style="max-height: 5rem" %}
+                        <div>
+                            {% if report_form.query.errors %}
+                                <p class="small" style="color: red;">{{ report_form.query.errors.0 }}</p>
+                            {% elif report_form.query.help_text %}
+                                <p class="small">{{ report_form.query.help_text }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                
+                    <div class="col-12">
+                        <label class="form-label" for="{{ report_form.tele.id_for_label }}">
+                            {{ report_form.tele.label }}
+                            {% if report_form.tele.field.required %}
+                                <span style="color: red">*</span>
+                            {% endif %}
+                        </label>
+                        {% render_field report_form.tele class="form-control" %}
+                        <div>
+                            {% if report_form.tele.errors %}
+                                <p class="small" style="color: red;">{{ report_form.tele.errors.0 }}</p>
+                            {% elif report_form.tele.help_text %}
+                                <p class="small">{{ report_form.tele.help_text }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
 
-        <div class="col-12 mb-3">
-            <button type="submit" class="btn">查询</button>
+                    <div class="col-12 mb-3">
+                        <label class="form-label" for="{{ report_form.wechat.id_for_label }}">
+                            {{ report_form.wechat.label }}
+                            {% if report_form.wechat.field.required %}
+                                <span style="color: red">*</span>
+                            {% endif %}
+                        </label>
+                        {% render_field report_form.wechat class="form-control" %}
+                        <div>
+                            {% if report_form.wechat.errors %}
+                                <p class="small" style="color: red;">{{ report_form.wechat.errors.0 }}</p>
+                            {% elif report_form.wechat.help_text %}
+                                <p class="small">{{ report_form.wechat.help_text }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <div class="form-check">
+                            {% render_field report_form.private_check class="form-check-input" %}
+                            <label class="form-check-label" for="{{ report_form.private_check.id_for_label }}">
+                                <small class="text-muted">圣博丽雅将全程保护您手机号及个人信息隐私安全，我同意<a href="{% url 'privateRule' %}">《个人信息保护声明》</a></small>
+                            </label>
+                            <div>
+                                {% if report_form.private_check.errors %}
+                                    <p class="small" style="color: red;">{{ report_form.private_check.errors.0 }}</p>
+                                {% elif report_form.private_check.help_text %}
+                                    <p class="small">{{ report_form.private_check.help_text }}</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mb-3">
+                        <button type="submit" class="btn btn-primary w-100">查询</button>
+                    </div>
+                </div>
+            </form>
         </div>
     </div>
-</form>
+
+    <div class="container">
+        {% if blacklist %}
+            <div class="row">
+                {% for b in blacklist %}
+                    {{ forloop.counter }}
+                    {{ b.name }}
+                    {{ b.get_tag_as_string }}
+                    <small>地址: {{ b.address }}</small>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
 
 </body>
 </html>

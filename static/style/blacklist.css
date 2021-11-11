@@ -1,0 +1,9 @@
+.blacklist {
+    background-color: rgba(208, 208, 208, .2);
+    border-radius: 0.3rem;
+}
+
+.blacklist > p {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem
+}

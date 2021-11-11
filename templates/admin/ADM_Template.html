@@ -64,7 +64,21 @@
                         </a>
                     </li>
 
+                    <li class="sidebar-header">
+                        更多
+                    </li>
 
+                    <li class="sidebar-item {% if active_page == 'ADM_Wechat' %} active {% endif %}">
+                        <a class="sidebar-link " href="{% url 'ADM_Wechat' 1 %}">
+                            <i class="bi bi-person-bounding-box"></i> <span class="align-middle">微信用户</span>
+                        </a>
+                    </li>
+
+                    <li class="sidebar-item {% if active_page == 'ADM_Report' %} active {% endif %}">
+                        <a class="sidebar-link " href="{% url 'ADM_Report' 1 %}">
+                            <i class="bi bi-person-lines-fill"></i> <span class="align-middle">黑名单咨询</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </nav>
