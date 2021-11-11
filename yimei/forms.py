@@ -209,19 +209,22 @@ class WithdrawalFrom(forms.Form):
                                     "class": "form-control",
                                     "placeholder": "amount"
                                 }))
-    method = forms.IntegerField(label="提现方式")
+    method = forms.ChoiceField(
+        label="提现方式",
+        choices=(
+            (1, "银行转账"),
+            (2, "支付宝"),
+            (3, "微信")
+        ),
+        widget=forms.Select(attrs={
+            "class": "form-select",
+        })
+    )
     account = forms.CharField(label="账户",
                               widget=forms.TextInput(attrs={
                                   "class": "form-control",
                                   "placeholder": "account"
                               }))
-
-    def clean_method (self):
-        method = self.cleaned_data.get("method")
-        if method not in [1, 2, 3]:
-            raise forms.ValidationError(message="支付方法不可用", code="MethodInvalid")
-        else:
-            return method
 
     def clean_account (self):
         method = self.cleaned_data.get("method")
