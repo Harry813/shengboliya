@@ -139,5 +139,53 @@
         {% endif %}
     </div>
 
+    {% if toast_list %}
+        <div aria-live="polite" aria-atomic="true" class="position-relative">
+            <div class="toast-container position-fixed bottom-0 end-0 p-3">
+                {% for t in toast_list %}
+                    {% if t.ty == 1 %}
+                        <div class="toast" role="alert" aria-live="assertive" aria-atomic="true"
+                             data-bs-delay="{{ t.time }}">
+                            <div class="toast-header">
+                                {% if t.image %}
+                                    <img src="{{ t.image }}" class="rounded me-2" alt="{{ t.image_alt }}">
+                                {% endif %}
+                                <strong class="me-auto">{{ t.title }}</strong>
+                                {% if t.side_message %}
+                                    <small class="text-muted">{{ t.side_message }}</small>
+                                {% endif %}
+                                <button type="button" class="btn-close" data-bs-dismiss="toast"
+                                        aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                {{ t.message }}
+                            </div>
+                        </div>
+                    {% elif t.ty == 2 %}
+                        <div class="toast align-items-center text-white {% if t.color %}bg-{{ t.color }}{% endif %} border-0"
+                             role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="{{ t.time }}">
+                            <div class="d-flex">
+                                <div class="toast-body">
+                                    {{ t.message }}
+                                </div>
+                                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                        data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <script type="text/javascript">
+        let toastElList = [].slice.call(document.querySelectorAll('.toast'))
+        let toastList = toastElList.map(function (toastEl) {
+            return new bootstrap.Toast(toastEl)
+        })
+        toastList.forEach(function (t) {
+            t.show()
+        })
+    </script>
 </body>
 </html>

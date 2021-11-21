@@ -455,6 +455,7 @@ def blacklist_view(request, uid=None):
 
         if form.is_valid():
             form.save()
+            request.session["toast_list"] = [get_toast(message="内容递交成功！", ty=2, color="success")]
             return render(request, "user/blacklist.html", param)
         else:
             return render(request, "user/blacklist.html", param)

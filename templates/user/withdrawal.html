@@ -109,34 +109,31 @@
                 </div>
             </div>
 
-            <div class="col-md-12 col-lg-8 offset-lg-2 mt-5">
+            <div class="col-md-12 col-lg-8 offset-lg-2">
                 <h4>提现方式</h4>
-                <div class="row">
-                    <div class="col" id="bank">
-                        <input type="radio" class="btn-check" name="method-check" id="method_bank" autocomplete="off"
-                               checked>
-                        <label class="btn btn-outline-primary w-100" for="method_bank" id="bank-label">银行转账</label>
-                    </div>
-                    <div class="col" id="alipay">
-                        <input type="radio" class="btn-check" name="method-check" id="method_alipay" autocomplete="off">
-                        <label class="btn btn-outline-alipay w-100" for="method_alipay" id="alipay-label">支付宝</label>
-                    </div>
-                    <div class="col" id="wechat">
-                        <input type="radio" class="btn-check" name="method-check" id="method_wechat" autocomplete="off">
-                        <label class="btn btn-outline-wechat w-100" for="method_wechat" id="wechat-label">微信支付</label>
-                    </div>
+            </div>
+
+            <div class="col-sm-12 col-md-4 col-lg-3 offset-lg-2 has-validation">
+                <div class="form-floating">
+                    {% if form.method.errors %}
+                        {% render_field form.method|add_class:"is-invalid" placeholder="method" %}
+                    {% elif validate and not form.method.errors %}
+                        {% render_field form.method|add_class:"is-valid" placeholder="method" %}
+                    {% else %}
+                        {% render_field form.method class="form-select" placeholder="method" %}
+                    {% endif %}
+                    <label for="{{ form.method.id_for_label }}">{{ form.method.label }}</label>
+                    {% if form.method.errors %}
+                        <div class="invalid-feedback" id="{{ form.method.id_for_label }}Feedback">
+                            {{ form.method.errors.0 }}
+                        </div>
+                    {% else %}
+                        <br>
+                    {% endif %}
                 </div>
             </div>
 
-            {% if form.account.errors %}
-                <div class="col-md-12 col-lg-8 offset-lg-2 has-validation">
-                    <div class="invalid-feedback" id="{{ form.account.id_for_label }}Feedback">
-                        {{ form.account.errors.0 }}
-                    </div>
-                </div>
-            {% endif %}
-
-            <div class="col-md-12 col-lg-8 offset-lg-2 has-validation">
+            <div class="col-sm-12 col-md-8 col-lg-5 has-validation">
                 <div class="form-floating">
                     {% if form.account.errors %}
                         {% render_field form.account|add_class:"is-invalid form-control" placeholder="amount" %}
@@ -160,11 +157,12 @@
                 </div>
             </div>
 
+            <div class="offset-lg-2 mt-3 text-danger">
+                {{ form.non_field_errors.0 }}
+            </div>
 
             <div class="col-md-10 offset-md-1 col-lg-8 offset-lg-2">
-                <div class="form-floating">
-                    <button class="form-control-lg btn btn-primary w-100" type="submit">提现</button>
-                </div>
+                <button class="form-control-lg btn btn-primary w-100" type="submit">提现</button>
             </div>
         </div>
     </form>
